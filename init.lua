@@ -12,37 +12,51 @@ local json = hs.json
 local contexts = {}
 local server
 
--- Load the utilities module and extract utility functions to separate variables
+-- Load the utilities module and msg module
 local utilities = dofile(hs.spoons.resourcePath("utilities.lua"))
-local getValueForKeyPath = utilities.getValueForKeyPath
-local loadImageAsBase64 = utilities.loadImageAsBase64
+local msg = dofile(hs.spoons.resourcePath("msg.lua"))
 
--- Message handling functions
+-- Extract utility functions and msg functions to separate variables
+local getValueForKeyPath = utilities.getValueForKeyPath
+local getImageMessage = msg.getImageMessage
+local setTitleMessage = msg.setTitleMessage
+local showOkMessage = msg.showOkMessage
+
+-- Attach msg helper methods to the main obj
+obj.getImageMessage = getImageMessage
+obj.setTitleMessage = setTitleMessage
+obj.showOkMessage = showOkMessage
+
+obj.keyDownSubscribers = {}
+obj.willAppearSubscribers = {}
+
+local keyDownSubscribers = obj.keyDownSubscribers
+local willAppearSubscribers = obj.willAppearSubscribers
+
 ---@param id string
----@param imagePath string
----@return Event|nil
-local function getImageMessage(id, imagePath)
-	local imageBase64 = loadImageAsBase64(imagePath)
-	if imageBase64 then
-		return {
-			event = "setImage",
-			context = contexts[id],
-			payload = {
-				image = imageBase64,
-				target = 0,
-				state = 0,
-			},
-		}
-	else
-		hs.alert.show("Image not loaded: " .. imagePath)
-		return nil
+---@param callback function
+function obj:subscribeKeyDown(id, callback)
+	if not id or not callback then
+		return
 	end
+	keyDownSubscribers[id] = keyDownSubscribers[id] or {}
+	table.insert(keyDownSubscribers[id], callback)
 end
 
----@param msg string
+---@param id string
+---@param callback function
+function obj:subscribeWillAppear(id, callback)
+	if not id or not callback then
+		return
+	end
+	willAppearSubscribers[id] = willAppearSubscribers[id] or {}
+	table.insert(willAppearSubscribers[id], callback)
+end
+
+---@param message string
 ---@return string|nil
-local function msgHandler(msg)
-	local params = json.decode(msg)
+local function msgHandler(message)
+	local params = json.decode(message)
 	if params == nil then
 		return
 	end
@@ -53,7 +67,10 @@ local function msgHandler(msg)
 	end
 
 	local id = getValueForKeyPath(params, "payload.settings.id")
-	if id ~= nil and contexts[id] == nil then
+	if id == nil then
+		return
+	end
+	if contexts[id] == nil then
 		contexts[id] = params.context
 		print("context added for id: " .. id)
 		obj.setTitle(id, "Not loaded")
@@ -61,14 +78,19 @@ local function msgHandler(msg)
 
 	local response = {}
 	if event == "keyDown" then
-		if id == nil or contexts[id] == nil then
+		if contexts[id] == nil then
 			return
 		end
-		response = { event = "showOk", context = contexts[id] }
+		if keyDownSubscribers[id] then
+			for _, callback in ipairs(keyDownSubscribers[id]) do
+				response = callback(contexts[id], params)
+			end
+		end
 	elseif event == "willAppear" then
-		if id == "loadImage" then
-			local imagePath = "~/Pictures/tv-test.png"
-			response = getImageMessage(id, imagePath) or {}
+		if willAppearSubscribers[id] then
+			for _, callback in ipairs(willAppearSubscribers[id]) do
+				response = callback(contexts[id], params)
+			end
 		end
 	end
 
@@ -81,7 +103,7 @@ function obj.setTitle(id, title)
 	if id == nil or contexts[id] == nil then
 		return
 	end
-	local message = { event = "setTitle", context = contexts[id], payload = { title = title, target = 0, state = 0 } }
+	local message = setTitleMessage(contexts[id], title)
 	server:send(json.encode(message))
 end
 
