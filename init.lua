@@ -1,56 +1,21 @@
---[[
-{
-  action = "org.tynsoe.streamdeck.wsproxy.proxy",
-  context = "8354545232ac65ce1062784ccd581bab",
-  device = "052B523D48DA807DD12736B4A4226765",
-  event = "keyDown",
-  payload = {
-    coordinates = {
-      column = 2,
-      row = 1
-    },
-    isInMultiAction = false,
-    settings = {
-      id = "listWindows",
-      remoteServer = "ws://localhost:3094/ws"
-    }
-  }
---]]
+local obj = {}
+obj.__index = obj
+
+-- Metadata
+obj.name = "StreamDeckButton"
+obj.version = "1.0"
+obj.author = "Danielo Rodríguez <rdanielo@gmail.com>"
+obj.license = "MIT - https://opensource.org/licenses/MIT"
+obj.homepage = "https://github.com/danielo515/StreamDeckButton.spoon"
 
 local json = hs.json
 local contexts = {}
-local module = {
-	server = nil,
-}
+local server
 
--- Utility functions
----@param tbl table
----@param keyPath string
----@return any
-local function getValueForKeyPath(tbl, keyPath)
-	local keys = hs.fnutils.split(keyPath, ".", nil, true)
-	local value = tbl
-
-	for _, key in ipairs(keys) do
-		value = value[key]
-		if value == nil then
-			return nil
-		end
-	end
-
-	return value
-end
-
----@param imagePath string
----@return string|nil
-local function loadImageAsBase64(imagePath)
-	local image = hs.image.imageFromPath(imagePath)
-	if image then
-		local imageData = image:encodeAsURLString()
-		return imageData
-	end
-	return nil
-end
+-- Load the utilities module and extract utility functions to separate variables
+local utilities = dofile(hs.spoons.resourcePath("utilities.lua"))
+local getValueForKeyPath = utilities.getValueForKeyPath
+local loadImageAsBase64 = utilities.loadImageAsBase64
 
 -- Message handling functions
 ---@param id string
@@ -91,7 +56,7 @@ local function msgHandler(msg)
 	if id ~= nil and contexts[id] == nil then
 		contexts[id] = params.context
 		print("context added for id: " .. id)
-		module.resetTitle(id, "Not loaded")
+		obj.setTitle(id, "Not loaded")
 	end
 
 	local response = {}
@@ -110,21 +75,9 @@ local function msgHandler(msg)
 	return json.encode(response)
 end
 
-local server = hs.httpserver.new(false, true)
-server:setName("stream-deck")
-server:setInterface("localhost")
-server:setPort(3094)
-server:setCallback(function(method, path, headers, body)
-	print(method, path, headers, body)
-	return "OK", 200, {}
-end)
-
-server:websocket("/ws", msgHandler)
-module.server = server
-
 ---@param id string
 ---@param title string
-function module.resetTitle(id, title)
+function obj.setTitle(id, title)
 	if id == nil or contexts[id] == nil then
 		return
 	end
@@ -132,14 +85,25 @@ function module.resetTitle(id, title)
 	server:send(json.encode(message))
 end
 
----@param id string
----@param title string
-function module.setTitle(id, title)
-	if id == nil or contexts[id] == nil then
-		return
-	end
-	local message = { event = "setTitle", context = contexts[id], payload = { title = title, target = 0, state = 0 } }
-	server:send(json.encode(message))
+function obj:start()
+	server = hs.httpserver.new(false, true)
+	server:setName("stream-deck")
+	server:setInterface("localhost")
+	server:setPort(3094)
+	server:setCallback(function(method, path, headers, body)
+		print(method, path, headers, body)
+		return "OK", 200, {}
+	end)
+
+	server:websocket("/ws", msgHandler)
 end
 
-return module
+function obj:stop()
+	if server then
+		server:stop()
+		server = nil
+	end
+end
+
+-- Return the Spoon object
+return obj
