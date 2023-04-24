@@ -1,3 +1,5 @@
+--- === StreamDeckButton ===
+
 local obj = {}
 obj.__index = obj
 
@@ -33,8 +35,13 @@ obj.willAppearSubscribers = {}
 local keyDownSubscribers = obj.keyDownSubscribers
 local willAppearSubscribers = obj.willAppearSubscribers
 
----@param id string
----@param callback function
+--- StreamDeckButton:subscribeKeyDown(id, callback)
+--- Method
+--- Subscribes a callback function to be called when the "keyDown" event occurs for a specific button
+---
+--- Parameters:
+---  * id - The identifier for the button
+---  * callback - A function to be called when the "keyDown" event occurs for the button with the given id
 function obj:subscribeKeyDown(id, callback)
 	if not id or not callback then
 		return
@@ -43,8 +50,13 @@ function obj:subscribeKeyDown(id, callback)
 	table.insert(keyDownSubscribers[id], callback)
 end
 
----@param id string
----@param callback function
+--- StreamDeckButton:subscribeWillAppear(id, callback)
+--- Method
+--- Subscribes a callback function to be called when the "willAppear" event occurs for a specific button
+---
+--- Parameters:
+---  * id - The identifier for the button
+---  * callback - A function to be called when the "willAppear" event occurs for the button with the given id
 function obj:subscribeWillAppear(id, callback)
 	if not id or not callback then
 		return
@@ -53,8 +65,6 @@ function obj:subscribeWillAppear(id, callback)
 	table.insert(willAppearSubscribers[id], callback)
 end
 
----@param message string
----@return string|nil
 local function msgHandler(message)
 	local params = json.decode(message)
 	if params == nil then
@@ -97,8 +107,13 @@ local function msgHandler(message)
 	return json.encode(response)
 end
 
----@param id string
----@param title string
+--- StreamDeckButton.setTitle(id, title)
+--- Method
+--- Sets the title for a specific button
+---
+--- Parameters:
+---  * id - The identifier for the button
+---  * title - The new title to set
 function obj.setTitle(id, title)
 	if id == nil or contexts[id] == nil then
 		return
@@ -106,7 +121,9 @@ function obj.setTitle(id, title)
 	local message = setTitleMessage(contexts[id], title)
 	server:send(json.encode(message))
 end
-
+--- StreamDeckButton:start()
+--- Method
+--- Starts the HTTP server and websocket for communication with the Stream Deck
 function obj:start()
 	server = hs.httpserver.new(false, true)
 	server:setName("stream-deck")

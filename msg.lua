@@ -4,9 +4,16 @@ msg.__index = msg
 local utilities = dofile(hs.spoons.resourcePath("utilities.lua"))
 local loadImageAsBase64 = utilities.loadImageAsBase64
 
----@param context string
----@param imagePath string
----@return Event|nil
+--- StreamDeckButton.getImageMessage(context, imagePath)
+--- Function
+--- Generates an image message for the StreamDeckButton
+---
+--- Parameters:
+---  * context - A string containing the context for the button
+---  * imagePath - A string containing the path to the image file
+---
+--- Returns:
+---  * An event table if the image was successfully loaded, otherwise nil
 function msg.getImageMessage(context, imagePath)
 	local imageBase64 = loadImageAsBase64(imagePath)
 	if imageBase64 then
@@ -25,9 +32,16 @@ function msg.getImageMessage(context, imagePath)
 	end
 end
 
----@param context string
----@param title string
----@return table
+--- StreamDeckButton.setTitleMessage(context, title)
+--- Function
+--- Generates a title message for the StreamDeckButton
+---
+--- Parameters:
+---  * context - A string containing the context for the button
+---  * title - A string containing the title text for the button
+---
+--- Returns:
+---  * A table containing the title message details
 function msg.setTitleMessage(context, title)
 	return {
 		event = "setTitle",
@@ -40,8 +54,15 @@ function msg.setTitleMessage(context, title)
 	}
 end
 
----@param context string
----@return table
+--- StreamDeckButton.showOkMessage(context)
+--- Function
+--- Generates a 'showOk' message for the StreamDeckButton
+---
+--- Parameters:
+---  * context - A string containing the context for the button
+---
+--- Returns:
+---  * A table containing the 'showOk' message details
 function msg.showOkMessage(context)
 	return {
 		event = "showOk",

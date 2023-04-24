@@ -1,0 +1,346 @@
+[
+  {
+    "Constant" : [
+
+    ],
+    "submodules" : [
+
+    ],
+    "Function" : [
+      {
+        "doc" : "Generates an image message for the StreamDeckButton\n\nParameters:\n * context - A string containing the context for the button\n * imagePath - A string containing the path to the image file\n\nReturns:\n * An event table if the image was successfully loaded, otherwise nil",
+        "stripped_doc" : [
+          "Generates an image message for the StreamDeckButton",
+          ""
+        ],
+        "def" : "StreamDeckButton.getImageMessage(context, imagePath)",
+        "name" : "getImageMessage",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton.getImageMessage(context, imagePath)",
+        "type" : "Function",
+        "returns" : [
+          " * An event table if the image was successfully loaded, otherwise nil"
+        ],
+        "desc" : "Generates an image message for the StreamDeckButton",
+        "parameters" : [
+          " * context - A string containing the context for the button",
+          " * imagePath - A string containing the path to the image file",
+          ""
+        ]
+      },
+      {
+        "doc" : "Generates a title message for the StreamDeckButton\n\nParameters:\n * context - A string containing the context for the button\n * title - A string containing the title text for the button\n\nReturns:\n * A table containing the title message details",
+        "stripped_doc" : [
+          "Generates a title message for the StreamDeckButton",
+          ""
+        ],
+        "def" : "StreamDeckButton.setTitleMessage(context, title)",
+        "name" : "setTitleMessage",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton.setTitleMessage(context, title)",
+        "type" : "Function",
+        "returns" : [
+          " * A table containing the title message details"
+        ],
+        "desc" : "Generates a title message for the StreamDeckButton",
+        "parameters" : [
+          " * context - A string containing the context for the button",
+          " * title - A string containing the title text for the button",
+          ""
+        ]
+      },
+      {
+        "doc" : "Generates a 'showOk' message for the StreamDeckButton\n\nParameters:\n * context - A string containing the context for the button\n\nReturns:\n * A table containing the 'showOk' message details",
+        "stripped_doc" : [
+          "Generates a 'showOk' message for the StreamDeckButton",
+          ""
+        ],
+        "def" : "StreamDeckButton.showOkMessage(context)",
+        "name" : "showOkMessage",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton.showOkMessage(context)",
+        "type" : "Function",
+        "returns" : [
+          " * A table containing the 'showOk' message details"
+        ],
+        "desc" : "Generates a 'showOk' message for the StreamDeckButton",
+        "parameters" : [
+          " * context - A string containing the context for the button",
+          ""
+        ]
+      }
+    ],
+    "Variable" : [
+
+    ],
+    "stripped_doc" : [
+
+    ],
+    "Deprecated" : [
+
+    ],
+    "desc" : "UNKNOWN DESC",
+    "type" : "Module",
+    "Constructor" : [
+
+    ],
+    "doc" : "",
+    "Method" : [
+      {
+        "doc" : "Subscribes a callback function to be called when the \"keyDown\" event occurs for a specific button\n\nParameters:\n * id - The identifier for the button\n * callback - A function to be called when the \"keyDown\" event occurs for the button with the given id",
+        "stripped_doc" : [
+          "Subscribes a callback function to be called when the \"keyDown\" event occurs for a specific button",
+          ""
+        ],
+        "def" : "StreamDeckButton:subscribeKeyDown(id, callback)",
+        "name" : "subscribeKeyDown",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton:subscribeKeyDown(id, callback)",
+        "type" : "Method",
+        "returns" : [
+
+        ],
+        "desc" : "Subscribes a callback function to be called when the \"keyDown\" event occurs for a specific button",
+        "parameters" : [
+          " * id - The identifier for the button",
+          " * callback - A function to be called when the \"keyDown\" event occurs for the button with the given id"
+        ]
+      },
+      {
+        "doc" : "Subscribes a callback function to be called when the \"willAppear\" event occurs for a specific button\n\nParameters:\n * id - The identifier for the button\n * callback - A function to be called when the \"willAppear\" event occurs for the button with the given id",
+        "stripped_doc" : [
+          "Subscribes a callback function to be called when the \"willAppear\" event occurs for a specific button",
+          ""
+        ],
+        "def" : "StreamDeckButton:subscribeWillAppear(id, callback)",
+        "name" : "subscribeWillAppear",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton:subscribeWillAppear(id, callback)",
+        "type" : "Method",
+        "returns" : [
+
+        ],
+        "desc" : "Subscribes a callback function to be called when the \"willAppear\" event occurs for a specific button",
+        "parameters" : [
+          " * id - The identifier for the button",
+          " * callback - A function to be called when the \"willAppear\" event occurs for the button with the given id"
+        ]
+      },
+      {
+        "doc" : "Sets the title for a specific button\n\nParameters:\n * id - The identifier for the button\n * title - The new title to set",
+        "stripped_doc" : [
+          "Sets the title for a specific button",
+          ""
+        ],
+        "def" : "StreamDeckButton.setTitle(id, title)",
+        "name" : "setTitle",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton.setTitle(id, title)",
+        "type" : "Method",
+        "returns" : [
+
+        ],
+        "desc" : "Sets the title for a specific button",
+        "parameters" : [
+          " * id - The identifier for the button",
+          " * title - The new title to set"
+        ]
+      },
+      {
+        "doc" : "Starts the HTTP server and websocket for communication with the Stream Deck",
+        "stripped_doc" : [
+          "Starts the HTTP server and websocket for communication with the Stream Deck"
+        ],
+        "def" : "StreamDeckButton:start()",
+        "name" : "start",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton:start()",
+        "type" : "Method",
+        "returns" : [
+
+        ],
+        "desc" : "Starts the HTTP server and websocket for communication with the Stream Deck",
+        "parameters" : [
+
+        ]
+      }
+    ],
+    "Command" : [
+
+    ],
+    "items" : [
+      {
+        "doc" : "Generates an image message for the StreamDeckButton\n\nParameters:\n * context - A string containing the context for the button\n * imagePath - A string containing the path to the image file\n\nReturns:\n * An event table if the image was successfully loaded, otherwise nil",
+        "stripped_doc" : [
+          "Generates an image message for the StreamDeckButton",
+          ""
+        ],
+        "def" : "StreamDeckButton.getImageMessage(context, imagePath)",
+        "name" : "getImageMessage",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton.getImageMessage(context, imagePath)",
+        "type" : "Function",
+        "returns" : [
+          " * An event table if the image was successfully loaded, otherwise nil"
+        ],
+        "desc" : "Generates an image message for the StreamDeckButton",
+        "parameters" : [
+          " * context - A string containing the context for the button",
+          " * imagePath - A string containing the path to the image file",
+          ""
+        ]
+      },
+      {
+        "doc" : "Generates a title message for the StreamDeckButton\n\nParameters:\n * context - A string containing the context for the button\n * title - A string containing the title text for the button\n\nReturns:\n * A table containing the title message details",
+        "stripped_doc" : [
+          "Generates a title message for the StreamDeckButton",
+          ""
+        ],
+        "def" : "StreamDeckButton.setTitleMessage(context, title)",
+        "name" : "setTitleMessage",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton.setTitleMessage(context, title)",
+        "type" : "Function",
+        "returns" : [
+          " * A table containing the title message details"
+        ],
+        "desc" : "Generates a title message for the StreamDeckButton",
+        "parameters" : [
+          " * context - A string containing the context for the button",
+          " * title - A string containing the title text for the button",
+          ""
+        ]
+      },
+      {
+        "doc" : "Generates a 'showOk' message for the StreamDeckButton\n\nParameters:\n * context - A string containing the context for the button\n\nReturns:\n * A table containing the 'showOk' message details",
+        "stripped_doc" : [
+          "Generates a 'showOk' message for the StreamDeckButton",
+          ""
+        ],
+        "def" : "StreamDeckButton.showOkMessage(context)",
+        "name" : "showOkMessage",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton.showOkMessage(context)",
+        "type" : "Function",
+        "returns" : [
+          " * A table containing the 'showOk' message details"
+        ],
+        "desc" : "Generates a 'showOk' message for the StreamDeckButton",
+        "parameters" : [
+          " * context - A string containing the context for the button",
+          ""
+        ]
+      },
+      {
+        "doc" : "Sets the title for a specific button\n\nParameters:\n * id - The identifier for the button\n * title - The new title to set",
+        "stripped_doc" : [
+          "Sets the title for a specific button",
+          ""
+        ],
+        "def" : "StreamDeckButton.setTitle(id, title)",
+        "name" : "setTitle",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton.setTitle(id, title)",
+        "type" : "Method",
+        "returns" : [
+
+        ],
+        "desc" : "Sets the title for a specific button",
+        "parameters" : [
+          " * id - The identifier for the button",
+          " * title - The new title to set"
+        ]
+      },
+      {
+        "doc" : "Starts the HTTP server and websocket for communication with the Stream Deck",
+        "stripped_doc" : [
+          "Starts the HTTP server and websocket for communication with the Stream Deck"
+        ],
+        "def" : "StreamDeckButton:start()",
+        "name" : "start",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton:start()",
+        "type" : "Method",
+        "returns" : [
+
+        ],
+        "desc" : "Starts the HTTP server and websocket for communication with the Stream Deck",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "Subscribes a callback function to be called when the \"keyDown\" event occurs for a specific button\n\nParameters:\n * id - The identifier for the button\n * callback - A function to be called when the \"keyDown\" event occurs for the button with the given id",
+        "stripped_doc" : [
+          "Subscribes a callback function to be called when the \"keyDown\" event occurs for a specific button",
+          ""
+        ],
+        "def" : "StreamDeckButton:subscribeKeyDown(id, callback)",
+        "name" : "subscribeKeyDown",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton:subscribeKeyDown(id, callback)",
+        "type" : "Method",
+        "returns" : [
+
+        ],
+        "desc" : "Subscribes a callback function to be called when the \"keyDown\" event occurs for a specific button",
+        "parameters" : [
+          " * id - The identifier for the button",
+          " * callback - A function to be called when the \"keyDown\" event occurs for the button with the given id"
+        ]
+      },
+      {
+        "doc" : "Subscribes a callback function to be called when the \"willAppear\" event occurs for a specific button\n\nParameters:\n * id - The identifier for the button\n * callback - A function to be called when the \"willAppear\" event occurs for the button with the given id",
+        "stripped_doc" : [
+          "Subscribes a callback function to be called when the \"willAppear\" event occurs for a specific button",
+          ""
+        ],
+        "def" : "StreamDeckButton:subscribeWillAppear(id, callback)",
+        "name" : "subscribeWillAppear",
+        "notes" : [
+
+        ],
+        "signature" : "StreamDeckButton:subscribeWillAppear(id, callback)",
+        "type" : "Method",
+        "returns" : [
+
+        ],
+        "desc" : "Subscribes a callback function to be called when the \"willAppear\" event occurs for a specific button",
+        "parameters" : [
+          " * id - The identifier for the button",
+          " * callback - A function to be called when the \"willAppear\" event occurs for the button with the given id"
+        ]
+      }
+    ],
+    "Field" : [
+
+    ],
+    "name" : "StreamDeckButton"
+  }
+]
