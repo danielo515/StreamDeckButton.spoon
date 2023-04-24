@@ -1,0 +1,44 @@
+name: Build and Zip StreamDeckButton Spoon
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    # Check-out the Hammerspoon repository we need for doc building
+    - uses: actions/checkout@v2
+      with:
+        repository: 'Hammerspoon/hammerspoon'
+        path: 'hammerspoon'
+
+    # Install doc-building dependencies
+    - name: Install docs dependencies
+      run: |
+        cd $GITHUB_WORKSPACE/hammerspoon
+        /usr/bin/python3 -m pip install -r requirements.txt
+
+    - name: Generate docs.json
+      run: |
+        /usr/bin/python3 ./hammerspoon/scripts/docs/bin/build_docs.py -e ./hammerspoon/scripts/docs/templates/ -o . -j -n .
+        rm docs_index.json
+        # git add docs.json
+
+    - name: Zip Spoon
+      run: |
+        if [ -f StreamDeckButton.spoon.zip ]; then
+          rm StreamDeckButton.spoon.zip
+        fi
+        zip -r StreamDeckButton.spoon.zip . -x '*.git*' -x '*.github*'
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: StreamDeckButton.spoon.zip
+        path: StreamDeckButton.spoon.zip
