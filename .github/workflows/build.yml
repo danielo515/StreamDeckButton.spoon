@@ -20,7 +20,8 @@ jobs:
       with:
         release-type: simple
         package-name: StreamDeckButton.spoon
-        extra-files: init.lua
+        extra-files: |
+            init.lua
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Zip Spoon

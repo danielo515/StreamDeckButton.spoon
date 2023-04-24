@@ -170,7 +170,7 @@ function obj:start()
 	server:websocket("/ws", msgHandler)
 	obj.server = server
 	server:start()
-	obj.logger.i("Server started")
+	obj.logger.f("Server started %s", server)
 	obj.logger.d(hs.inspect(hs.settings.get(obj.settingsPath)))
 end
 
