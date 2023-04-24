@@ -127,6 +127,20 @@ function obj.setTitle(id, title)
 	local message = setTitleMessage(contexts[id], title)
 	obj.server:send(json.encode(message))
 end
+--- StreamDeckButton.setImage(id, imagePath)
+--- Method
+--- Sets the image for a specific button
+---
+--- Parameters:
+---  * id - The identifier for the button
+---  * imagePath - The path to the image to set
+function obj.setImage(id, imagePath)
+	if id == nil or contexts[id] == nil then
+		return
+	end
+	local message = getImageMessage(contexts[id], imagePath)
+	obj.server:send(json.encode(message))
+end
 --- StreamDeckButton:start()
 --- Method
 --- Starts the HTTP server and websocket for communication with the Stream Deck
