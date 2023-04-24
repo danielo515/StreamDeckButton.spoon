@@ -10,9 +10,11 @@ obj.author = "Danielo Rodríguez <rdanielo@gmail.com>"
 obj.license = "MIT - https://opensource.org/licenses/MIT"
 obj.homepage = "https://github.com/danielo515/StreamDeckButton.spoon"
 
+--- Logger object used within the Spoon. Can be accessed to set the default log level for the messages coming from the Spoon.
+obj.logger = hs.logger.new("StreamDeckButton", "debug")
+
 local json = hs.json
 local contexts = {}
-local server
 
 -- Load the utilities module and msg module
 local utilities = dofile(hs.spoons.resourcePath("utils.lua"))
@@ -67,22 +69,26 @@ end
 
 local function msgHandler(message)
 	local params = json.decode(message)
+	obj.logger.d("Received message: " .. message)
 	if params == nil then
+		obj.logger.e("params is nil")
 		return
 	end
 
 	local event = params.event
 	if event == nil then
+		obj.logger.e("event is nil")
 		return
 	end
 
 	local id = getValueForKeyPath(params, "payload.settings.id")
 	if id == nil then
+		obj.logger.e("id is nil")
 		return
 	end
 	if contexts[id] == nil then
 		contexts[id] = params.context
-		print("context added for id: " .. id)
+		obj.logger.i("context added for id: " .. id)
 		obj.setTitle(id, "Not loaded")
 	end
 
@@ -119,25 +125,29 @@ function obj.setTitle(id, title)
 		return
 	end
 	local message = setTitleMessage(contexts[id], title)
-	server:send(json.encode(message))
+	obj.server:send(json.encode(message))
 end
 --- StreamDeckButton:start()
 --- Method
 --- Starts the HTTP server and websocket for communication with the Stream Deck
 function obj:start()
-	server = hs.httpserver.new(false, true)
+	local server = hs.httpserver.new(false, true)
 	server:setName("stream-deck")
 	server:setInterface("localhost")
 	server:setPort(3094)
 	server:setCallback(function(method, path, headers, body)
-		print(method, path, headers, body)
+		obj.logger.d(method, path, headers, body)
 		return "OK", 200, {}
 	end)
-
+	obj.logger.i("Starting server")
 	server:websocket("/ws", msgHandler)
+	obj.server = server
+	server:start()
+	obj.logger.i("Server started")
 end
 
 function obj:stop()
+	local server = obj.server
 	if server then
 		server:stop()
 		server = nil
