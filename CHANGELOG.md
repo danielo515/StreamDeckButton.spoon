@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/danielo515/StreamDeckButton.spoon/compare/v1.0.0...v2.0.0) (2023-04-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* better function names
+
+### Features
+
+* better function names ([742728c](https://github.com/danielo515/StreamDeckButton.spoon/commit/742728c9cf83989925e95fd696c6d906763a2114))
+
 ## 1.0.0 (2023-04-24)
 
 
