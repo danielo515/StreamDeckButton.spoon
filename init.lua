@@ -5,6 +5,7 @@ obj.__index = obj
 
 -- Metadata
 obj.name = "StreamDeckButton"
+obj.settingsPath = "streamDeckButton"
 -- x-release-please-start-version
 obj.version = "1.0"
 -- x-release-please-end
@@ -25,12 +26,12 @@ local msg = dofile(hs.spoons.resourcePath("msg.lua"))
 -- Extract utility functions and msg functions to separate variables
 local getValueForKeyPath = utilities.getValueForKeyPath
 local getImageMessage = msg.getImageMessage
-local setTitleMessage = msg.setTitleMessage
+local getTitleMessage = msg.getTitleMessage
 local showOkMessage = msg.showOkMessage
 
 -- Attach msg helper methods to the main obj
 obj.getImageMessage = getImageMessage
-obj.setTitleMessage = setTitleMessage
+obj.getTitleMessage = getTitleMessage
 obj.showOkMessage = showOkMessage
 
 obj.keyDownSubscribers = {}
@@ -39,14 +40,22 @@ obj.willAppearSubscribers = {}
 local keyDownSubscribers = obj.keyDownSubscribers
 local willAppearSubscribers = obj.willAppearSubscribers
 
---- StreamDeckButton:subscribeKeyDown(id, callback)
+local function storeInSettings(id, context)
+	local settings = hs.settings.get(obj.settingsPath) or {}
+	settings[id] = settings[id] or {}
+	settings[id][context] = true
+	hs.settings.set(obj.settingsPath)
+	obj.logger.df("Storing context %s for button %s", context, id)
+end
+
+--- StreamDeckButton:onKeyDown(id, callback)
 --- Method
 --- Subscribes a callback function to be called when the "keyDown" event occurs for a specific button
 ---
 --- Parameters:
 ---  * id - The identifier for the button
 ---  * callback - A function to be called when the "keyDown" event occurs for the button with the given id
-function obj:subscribeKeyDown(id, callback)
+function obj:onKeyDown(id, callback)
 	if not id or not callback then
 		return
 	end
@@ -54,14 +63,14 @@ function obj:subscribeKeyDown(id, callback)
 	table.insert(keyDownSubscribers[id], callback)
 end
 
---- StreamDeckButton:subscribeWillAppear(id, callback)
+--- StreamDeckButton:onWillAppear(id, callback)
 --- Method
 --- Subscribes a callback function to be called when the "willAppear" event occurs for a specific button
 ---
 --- Parameters:
 ---  * id - The identifier for the button
 ---  * callback - A function to be called when the "willAppear" event occurs for the button with the given id
-function obj:subscribeWillAppear(id, callback)
+function obj:onWillAppear(id, callback)
 	if not id or not callback then
 		return
 	end
@@ -92,6 +101,7 @@ local function msgHandler(message)
 		contexts[id] = params.context
 		obj.logger.i("context added for id: " .. id)
 		obj.setTitle(id, "Not loaded")
+		storeInSettings(id, params.context)
 	end
 
 	local response = {}
@@ -102,6 +112,9 @@ local function msgHandler(message)
 		if keyDownSubscribers[id] then
 			for _, callback in ipairs(keyDownSubscribers[id]) do
 				response = callback(contexts[id], params)
+				if response == nil then
+					response = showOkMessage(contexts[id])
+				end
 			end
 		end
 	elseif event == "willAppear" then
@@ -126,7 +139,7 @@ function obj.setTitle(id, title)
 	if id == nil or contexts[id] == nil then
 		return
 	end
-	local message = setTitleMessage(contexts[id], title)
+	local message = getTitleMessage(contexts[id], title)
 	obj.server:send(json.encode(message))
 end
 --- StreamDeckButton.setImage(id, imagePath)
@@ -160,6 +173,7 @@ function obj:start()
 	obj.server = server
 	server:start()
 	obj.logger.i("Server started")
+	obj.logger.d(hs.inspect(hs.settings.get(obj.settingsPath)))
 end
 
 function obj:stop()

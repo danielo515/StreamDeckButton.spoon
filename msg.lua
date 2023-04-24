@@ -42,7 +42,7 @@ end
 ---
 --- Returns:
 ---  * A table containing the title message details
-function msg.setTitleMessage(context, title)
+function msg.getTitleMessage(context, title)
 	return {
 		event = "setTitle",
 		context = context,
