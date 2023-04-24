@@ -15,7 +15,7 @@ local contexts = {}
 local server
 
 -- Load the utilities module and msg module
-local utilities = dofile(hs.spoons.resourcePath("utilities.lua"))
+local utilities = dofile(hs.spoons.resourcePath("utils.lua"))
 local msg = dofile(hs.spoons.resourcePath("msg.lua"))
 
 -- Extract utility functions and msg functions to separate variables

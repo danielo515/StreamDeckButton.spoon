@@ -1,7 +1,7 @@
 local msg = {}
 msg.__index = msg
 
-local utilities = dofile(hs.spoons.resourcePath("utilities.lua"))
+local utilities = dofile(hs.spoons.resourcePath("utils.lua"))
 local loadImageAsBase64 = utilities.loadImageAsBase64
 
 --- StreamDeckButton.getImageMessage(context, imagePath)
