@@ -15,6 +15,7 @@ obj.homepage = "https://github.com/danielo515/StreamDeckButton.spoon"
 obj.logger = hs.logger.new("StreamDeckButton", "debug")
 
 local json = hs.json
+local s = hs.settings
 local contexts = {}
 
 -- Load the utilities module and msg module
@@ -39,10 +40,10 @@ local keyDownSubscribers = obj.keyDownSubscribers
 local willAppearSubscribers = obj.willAppearSubscribers
 
 local function storeInSettings(id, context)
-	local settings = hs.settings.get(obj.settingsPath) or {}
+	local settings = s.get(obj.settingsPath) or {}
 	settings[id] = settings[id] or {}
 	settings[id][context] = true
-	hs.settings.set(obj.settingsPath)
+	s.set(obj.settingsPath)
 	obj.logger.df("Storing context %s for button %s", context, id)
 end
 
@@ -171,7 +172,7 @@ function obj:start()
 	obj.server = server
 	server:start()
 	obj.logger.f("Server started %s", server)
-	obj.logger.d(hs.inspect(hs.settings.get(obj.settingsPath)))
+	obj.logger.df("Settings: %s", hs.inspect(s.get(obj.settingsPath)))
 end
 
 function obj:stop()
