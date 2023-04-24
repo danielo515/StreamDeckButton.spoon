@@ -26,7 +26,7 @@ jobs:
 
     - name: Generate docs.json
       run: |
-        /usr/bin/python3 ./hammerspoon/scripts/docs/bin/build_docs.py -e ./hammerspoon/scripts/docs/templates/ -o . -j -n .
+        /usr/bin/python3 ./hammerspoon/scripts/docs/bin/build_docs.py -e ./hammerspoon/scripts/docs/templates/ -o ./ -j -n -d
         rm docs_index.json
         # git add docs.json
 
