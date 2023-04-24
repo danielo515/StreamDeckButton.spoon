@@ -5,7 +5,9 @@ obj.__index = obj
 
 -- Metadata
 obj.name = "StreamDeckButton"
+-- x-release-please-start-version
 obj.version = "1.0"
+-- x-release-please-end
 obj.author = "Danielo Rodríguez <rdanielo@gmail.com>"
 obj.license = "MIT - https://opensource.org/licenses/MIT"
 obj.homepage = "https://github.com/danielo515/StreamDeckButton.spoon"

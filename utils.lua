@@ -1,4 +1,5 @@
 local utils = {}
+local img = hs.image
 -- Utility functions
 
 function utils.getValueForKeyPath(tbl, keyPath)
@@ -16,7 +17,7 @@ function utils.getValueForKeyPath(tbl, keyPath)
 end
 
 function utils.loadImageAsBase64(imagePath)
-	local image = hs.image.imageFromPath(imagePath)
+	local image = img.imageFromPath(imagePath)
 	if image then
 		local imageData = image:encodeAsURLString()
 		return imageData
