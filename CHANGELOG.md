@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/danielo515/StreamDeckButton.spoon/compare/v2.0.0...v2.0.1) (2023-04-25)
+
+
+### Bug Fixes
+
+* properly save settings ([806cb96](https://github.com/danielo515/StreamDeckButton.spoon/commit/806cb96787face99cade2bf9e9853ffaf8dbd123))
+
 ## [2.0.0](https://github.com/danielo515/StreamDeckButton.spoon/compare/v1.0.0...v2.0.0) (2023-04-24)
 
 
