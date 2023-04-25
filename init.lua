@@ -46,13 +46,19 @@ obj.willAppearSubscribers = {}
 
 local keyDownSubscribers = obj.keyDownSubscribers
 local willAppearSubscribers = obj.willAppearSubscribers
+local is = hs.inspect
+
+local function getSettings()
+	local settings = s.get(obj.name) or {}
+	return settings
+end
 
 local function storeInSettings(id, context)
-	local settings = s.get(obj.settingsPath) or {}
+	local settings = getSettings()
 	settings[id] = settings[id] or {}
 	settings[id][context] = true
-	s.set(obj.settingsPath)
-	obj.logger.df("Storing context %s for button %s", context, id)
+	s.set(obj.name, settings)
+	obj.logger.df("Settings: %s", is(settings))
 end
 
 --- StreamDeckButton:onKeyDown(id, callback)
@@ -180,7 +186,7 @@ function obj:start()
 	obj.server = server
 	server:start()
 	obj.logger.f("Server started %s", server)
-	obj.logger.df("Settings: %s", hs.inspect(s.get(obj.settingsPath)))
+	obj.logger.df("Settings: %s", hs.inspect(getSettings()))
 end
 
 function obj:stop()
