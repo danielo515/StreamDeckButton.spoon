@@ -1,6 +1,14 @@
 --- === StreamDeckButton ===
+local Events = {
+	keyDown = "keyDown",
+	willAppear = "willAppear",
+	willDisappear = "willDisappear",
+	keyUp = "keyUp",
+}
+local obj = {
+	Events = Events,
+}
 
-local obj = {}
 obj.__index = obj
 
 -- Metadata
