@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/danielo515/StreamDeckButton.spoon/compare/v2.0.1...v2.1.0) (2023-04-26)
+
+
+### Features
+
+* restore contexts on init ([3353ba9](https://github.com/danielo515/StreamDeckButton.spoon/commit/3353ba99d4b556f88e93855e44d3cc21ccca1faa))
+
 ## [2.0.1](https://github.com/danielo515/StreamDeckButton.spoon/compare/v2.0.0...v2.0.1) (2023-04-25)
 
 
