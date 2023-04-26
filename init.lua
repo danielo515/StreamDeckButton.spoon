@@ -7,6 +7,7 @@ local Events = {
 }
 local obj = {
 	Events = Events,
+	contexts = {},
 }
 
 obj.__index = obj
@@ -24,7 +25,7 @@ obj.logger = hs.logger.new("StreamDeckButton", "debug")
 
 local json = hs.json
 local s = hs.settings
-local contexts = {}
+local contexts = obj.contexts
 
 -- Load the utilities module and msg module
 local utilities = dofile(hs.spoons.resourcePath("utils.lua"))
@@ -61,6 +62,16 @@ local function storeInSettings(id, context)
 	obj.logger.df("Settings: %s", is(settings))
 end
 
+function obj:init()
+	local settings = getSettings()
+	for id, contexts in pairs(settings) do
+		for context, _ in pairs(contexts) do
+			self.logger.df("Restoring context %s for id %s", context, id)
+			self.contexts[id] = context
+		end
+	end
+end
+
 --- StreamDeckButton:onKeyDown(id, callback)
 --- Method
 --- Subscribes a callback function to be called when the "keyDown" event occurs for a specific button
@@ -93,11 +104,12 @@ end
 
 local function msgHandler(message)
 	local params = json.decode(message)
-	obj.logger.d("Received message: " .. message)
 	if params == nil then
 		obj.logger.e("params is nil")
+		obj.logger.d("message: " .. message)
 		return
 	end
+	obj.logger.d("Received message: ", is(params))
 
 	local event = params.event
 	if event == nil then
@@ -111,11 +123,11 @@ local function msgHandler(message)
 		return
 	end
 	if contexts[id] == nil then
-		contexts[id] = params.context
-		obj.logger.i("context added for id: " .. id)
-		obj.setTitle(id, "Not loaded")
-		storeInSettings(id, params.context)
+		obj.logger.f("new id found: %s with this context: %s", id, params.context)
+		obj.setTitle(id, "Not loaded", params.context)
 	end
+	contexts[id] = params.context -- always update the context
+	storeInSettings(id, params.context)
 
 	local response = {}
 	if event == "keyDown" then
@@ -148,11 +160,18 @@ end
 --- Parameters:
 ---  * id - The identifier for the button
 ---  * title - The new title to set
-function obj.setTitle(id, title)
-	if id == nil or contexts[id] == nil then
+function obj.setTitle(id, title, ctx)
+	if id == nil then
+		obj.logger.d("setTitle: id is nil")
 		return
 	end
-	local message = getTitleMessage(contexts[id], title)
+	-- the context param is an internal optional parameter
+	local context = ctx or contexts[id]
+	if context == nil then
+		obj.logger.f("setTitle: context is nil ctx:%s, contexts[%s]:%s", ctx, id, contexts[id])
+		return
+	end
+	local message = getTitleMessage(context, title)
 	obj.server:send(json.encode(message))
 end
 --- StreamDeckButton.setImage(id, imagePath)
