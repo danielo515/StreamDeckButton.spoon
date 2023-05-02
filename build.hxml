@@ -1,0 +1,23 @@
+--macro nullSafety("Hammerspoon", Strict)
+
+-D analyzer-module
+-D analyzer-optimize
+-D analyzer-user-var-fusion
+-D analyzer-const_propagation
+-D analyzer-copy_propagation
+-D analyzer-local_dce
+-D analyzer-fusion
+-D analyzer-purity_inference
+
+-D lua-vanilla
+-D luajit
+
+
+-cp src
+-dce full
+
+Main
+
+--each
+
+--lua out/init.lua
