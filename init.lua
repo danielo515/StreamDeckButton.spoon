@@ -65,10 +65,8 @@ end
 function obj:init()
 	local settings = getSettings()
 	for id, contexts in pairs(settings) do
-		for context, _ in pairs(contexts) do
-			self.logger.df("Restoring context %s for id %s", context, id)
-			self.contexts[id] = context
-		end
+		self.logger.df("Restoring context for id %s %s", id, contexts)
+		self.contexts[id] = contexts
 	end
 end
 
@@ -125,8 +123,9 @@ local function msgHandler(message)
 	if contexts[id] == nil then
 		obj.logger.f("new id found: %s with this context: %s", id, params.context)
 		obj.setTitle(id, "Not loaded", params.context)
+		contexts[id] = { [params.context] = true }
 	end
-	contexts[id] = params.context -- always update the context
+	contexts[id][params.context] = true -- always store the context
 	storeInSettings(id, params.context)
 
 	local response = {}
@@ -166,13 +165,15 @@ function obj.setTitle(id, title, ctx)
 		return
 	end
 	-- the context param is an internal optional parameter
-	local context = ctx or contexts[id]
-	if context == nil then
-		obj.logger.f("setTitle: context is nil ctx:%s, contexts[%s]:%s", ctx, id, contexts[id])
+	local contexts = (ctx and { [ctx] = true }) or contexts[id]
+	if contexts == nil then
+		obj.logger.f("setTitle: context is nil ctx:%s, contexts[%s]:%s", ctx, id, contexts)
 		return
 	end
-	local message = getTitleMessage(context, title)
-	obj.server:send(json.encode(message))
+	for context, _ in pairs(contexts) do
+		local message = getTitleMessage(context, title)
+		obj.server:send(json.encode(message))
+	end
 end
 --- StreamDeckButton.setImage(id, imagePath)
 --- Method
@@ -185,8 +186,10 @@ function obj.setImage(id, imagePath)
 	if id == nil or contexts[id] == nil then
 		return
 	end
-	local message = getImageMessage(contexts[id], imagePath)
-	obj.server:send(json.encode(message))
+	for context, _ in pairs(contexts[id]) do
+		local message = getImageMessage(context, imagePath)
+		obj.server:send(json.encode(message))
+	end
 end
 --- StreamDeckButton:start()
 --- Method
