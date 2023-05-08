@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/danielo515/StreamDeckButton.spoon/compare/v2.1.0...v3.0.0) (2023-05-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* treat contexts like a table, so it works properly when several buttons has same id
+
+### Features
+
+* treat contexts like a table, so it works properly when several buttons has same id ([d671467](https://github.com/danielo515/StreamDeckButton.spoon/commit/d671467bc1a4de2d1b9dfbd3d9a7072c475e9c1d))
+
 ## [2.1.0](https://github.com/danielo515/StreamDeckButton.spoon/compare/v2.0.1...v2.1.0) (2023-04-26)
 
 
