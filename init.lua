@@ -101,13 +101,14 @@ function obj:onWillAppear(id, callback)
 end
 
 local function msgHandler(message)
+	obj.logger.d("Received message")
 	local params = json.decode(message)
 	if params == nil then
 		obj.logger.e("params is nil")
 		obj.logger.d("message: " .. message)
 		return
 	end
-	obj.logger.d("Received message: ", is(params))
+	obj.logger.d("decoded message: ", is(params))
 
 	local event = params.event
 	if event == nil then
@@ -128,27 +129,28 @@ local function msgHandler(message)
 	contexts[id][params.context] = true -- always store the context
 	storeInSettings(id, params.context)
 
+	if contexts[id] == nil then
+		obj.logger.e("conntexts[id] is nil forr id: %s", id)
+		return
+	end
 	local response = {}
 	if event == "keyDown" then
-		if contexts[id] == nil then
-			return
-		end
 		if keyDownSubscribers[id] then
 			for _, callback in ipairs(keyDownSubscribers[id]) do
-				response = callback(contexts[id], params)
-				if response == nil then
-					response = showOkMessage(contexts[id])
-				end
+				response = callback(params.context, params)
 			end
 		end
 	elseif event == "willAppear" then
 		if willAppearSubscribers[id] then
 			for _, callback in ipairs(willAppearSubscribers[id]) do
-				response = callback(contexts[id], params)
+				response = callback(params.context, params)
 			end
 		end
 	end
 
+	if response == nil then
+		response = showOkMessage(contexts[id])
+	end
 	return json.encode(response)
 end
 
@@ -184,6 +186,7 @@ end
 ---  * imagePath - The path to the image to set
 function obj.setImage(id, imagePath)
 	if id == nil or contexts[id] == nil then
+		obj.logger.e("setImage: id is nil or contexts[id] is nil", id)
 		return
 	end
 	for context, _ in pairs(contexts[id]) do
