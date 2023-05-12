@@ -522,8 +522,9 @@ end
 
 ___Main_Main_Fields_.new = {}
 ___Main_Main_Fields_.start = function() 
-  __haxe_Log.trace("Starting Server, nabo", _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/Main.hx",lineNumber=5,className="_Main.Main_Fields_",methodName="start"}));
+  __haxe_Log.trace("Starting Server, nabo", _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/Main.hx",lineNumber=6,className="_Main.Main_Fields_",methodName="start"}));
   hs.httpserver.new(false, true);
+  hs.alert.show("Server started");
 end
 _hx_exports["_Main"]["Main_Fields_"]["start"] = ___Main_Main_Fields_.start
 
