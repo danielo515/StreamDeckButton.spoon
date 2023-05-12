@@ -1,12 +1,8 @@
 package hammerspoon;
 
-@:native("httpserver")
-extern class Ht {
-	@:native("new") @:luaDotMethod public function make(ssl:Bool, bonjour:Bool):HttpServer;
-}
-
-@:native("httpserver")
+@:native("hs.httpserver")
 extern class HttpServer {
+	@:native("new") @:luaDotMethod static public function make(ssl:Bool, bonjour:Bool):HttpServer;
 	public function getInterface():Null<String>;
 	public function getName():String;
 	public function getPort():Int;
@@ -22,7 +18,3 @@ extern class HttpServer {
 	public function websocket(path:String, callback:Dynamic):Void;
 }
 
-@:native("hs")
-extern class Hammerspoon {
-	public static final httpserver:Ht;
-}

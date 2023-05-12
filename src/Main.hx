@@ -1,7 +1,7 @@
-import hammerspoon.Hammerspoon as Hs;
+import hammerspoon.Hammerspoon.HttpServer;
 
 @:expose
 function start() {
 	trace("Starting Server, nabo");
-	final server = Hs.httpserver.make(false, true);
+	final server = HttpServer.make(false, true);
 }
