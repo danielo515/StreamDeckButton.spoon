@@ -195,8 +195,6 @@ local Class = _hx_e();
 local Enum = _hx_e();
 
 local _hx_exports = _hx_exports or {}
-_hx_exports["_Main"] = _hx_exports["_Main"] or _hx_e()
-_hx_exports["_Main"]["Main_Fields_"] = _hx_exports["_Main"]["Main_Fields_"] or _hx_e()
 local Array = _hx_e()
 ___Main_Main_Fields_ = _hx_e()
 local Math = _hx_e()
@@ -522,11 +520,13 @@ end
 
 ___Main_Main_Fields_.new = {}
 ___Main_Main_Fields_.start = function() 
-  __haxe_Log.trace("Starting Server, nabo", _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/Main.hx",lineNumber=6,className="_Main.Main_Fields_",methodName="start"}));
+  __haxe_Log.trace("Starting Server, nabo", _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/Main.hx",lineNumber=7,className="_Main.Main_Fields_",methodName="start"}));
   hs.httpserver.new(false, true);
   hs.alert.show("Server started");
+  local test = hs.json.encode(_hx_o({__fields__={a=true,b=true},a=1,b=2}));
+  __haxe_Log.trace(test, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/Main.hx",lineNumber=11,className="_Main.Main_Fields_",methodName="start"}));
 end
-_hx_exports["_Main"]["Main_Fields_"]["start"] = ___Main_Main_Fields_.start
+_hx_exports["start"] = ___Main_Main_Fields_.start
 
 Math.new = {}
 Math.isNaN = function(f) 

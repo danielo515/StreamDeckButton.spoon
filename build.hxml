@@ -16,8 +16,7 @@
 -cp src
 -dce full
 
-Main
-
 --each
 
+Main
 --lua out/init.lua
