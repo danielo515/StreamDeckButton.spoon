@@ -7,7 +7,7 @@ if [ $# -ne 1 ] || [ ! -f "$1" ]; then
 fi
 
 # Read the contents of the first file into a variable
-file1="./reference.hx"
+file1="$(dirname $0)/reference.hx"
 content1=$(cat "$file1")
 
 # Read the contents of the second file into a variable
