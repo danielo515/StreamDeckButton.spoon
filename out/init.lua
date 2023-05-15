@@ -196,11 +196,13 @@ local Enum = _hx_e();
 
 local _hx_exports = _hx_exports or {}
 local Array = _hx_e()
-___Main_Main_Fields_ = _hx_e()
+___Main_Dict_Impl_ = _hx_e()
+___Main_StoredSettings_Impl_ = _hx_e()
+local StreamDeckButton = _hx_e()
 local Math = _hx_e()
+local Reflect = _hx_e()
 local String = _hx_e()
 local Std = _hx_e()
-__haxe_Log = _hx_e()
 __haxe_iterators_ArrayIterator = _hx_e()
 __haxe_iterators_ArrayKeyValueIterator = _hx_e()
 
@@ -518,15 +520,94 @@ Array.prototype.resize = function(self,len)
   end;
 end
 
-___Main_Main_Fields_.new = {}
-___Main_Main_Fields_.start = function() 
-  __haxe_Log.trace("Starting Server, nabo", _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/Main.hx",lineNumber=7,className="_Main.Main_Fields_",methodName="start"}));
-  hs.httpserver.new(false, true);
-  hs.alert.show("Server started");
-  local test = hs.json.encode(_hx_o({__fields__={a=true,b=true},a=1,b=2}));
-  __haxe_Log.trace(test, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/Main.hx",lineNumber=11,className="_Main.Main_Fields_",methodName="start"}));
+___Main_Dict_Impl_.new = {}
+___Main_Dict_Impl_.set = function(this1,key,value) 
+  this1[key] = value;
 end
-_hx_exports["start"] = ___Main_Main_Fields_.start
+
+___Main_StoredSettings_Impl_.new = {}
+___Main_StoredSettings_Impl_.get = function(this1,key) 
+  local _hx_continue_1 = false;
+  while (true) do repeat 
+    local value = Reflect.field(this1, key);
+    if (value == nil) then 
+      this1[key] = _hx_e();
+      break;
+    end;
+    do return value end;until true
+    if _hx_continue_1 then 
+    _hx_continue_1 = false;
+    break;
+    end;
+    
+  end;
+end
+
+StreamDeckButton.new = function() 
+  local self = _hx_new(StreamDeckButton.prototype)
+  StreamDeckButton.super(self)
+  return self
+end
+StreamDeckButton.super = function(self) 
+  self.willAppearSubscribers = _hx_e();
+  self.keyDownSubscribers = _hx_e();
+  self.contexts = _hx_e();
+  self.logger = hs.logger.new("StreamDeckButton", "debug");
+  self.homepage = "https://github.com/danielo515/StreamDeckButton.spoon";
+  self.license = "MIT - https://opensource.org/licenses/MIT";
+  self.author = "Danielo Rodríguez <rdanielo@gmail.com>";
+  self.version = "3.0.0";
+  self.settingsPath = "streamDeckButton";
+  self.name = "StreamDeckButton";
+end
+_hx_exports["StreamDeckButton"] = StreamDeckButton
+StreamDeckButton.prototype = _hx_e();
+StreamDeckButton.prototype.getSettings = function(self) 
+  local readSettings = hs.settings.get(self.name);
+  do return (function() 
+    local _hx_1
+    if (readSettings ~= nil) then 
+    _hx_1 = readSettings; else 
+    _hx_1 = ({}); end
+    return _hx_1
+  end )() end
+end
+StreamDeckButton.prototype.storeInSettings = function(self,id,context) 
+  local settings = self:getSettings();
+  ___Main_Dict_Impl_.set(___Main_StoredSettings_Impl_.get(settings, id), context, context);
+  hs.settings.set(self.name, settings);
+  self.logger.df("Settings: %s", Std.string(settings));
+end
+StreamDeckButton.prototype.init = function(self) 
+  local settings = self:getSettings();
+  local _g = 0;
+  local _g1 = Reflect.fields(settings);
+  while (_g < _g1.length) do 
+    local id = _g1[_g];
+    _g = _g + 1;
+    local contexts = ___Main_StoredSettings_Impl_.get(settings, id);
+    self.logger.df("Restoring context for id %s %s", id, Std.string(contexts));
+    self.contexts[id] = contexts;
+  end;
+end
+StreamDeckButton.prototype.onKeyDown = function(self,id,callback) 
+  if ((id == nil) or (callback == nil)) then 
+    do return end;
+  end;
+  if (Reflect.field(self.keyDownSubscribers, id) == nil) then 
+    self.keyDownSubscribers[id] = _hx_tab_array({}, 0);
+  end;
+  Reflect.field(self.keyDownSubscribers, id):push(callback);
+end
+StreamDeckButton.prototype.onWillAppear = function(self,id,callback) 
+  if ((id == nil) or (callback == nil)) then 
+    do return end;
+  end;
+  if (Reflect.field(self.willAppearSubscribers, id) == nil) then 
+    self.willAppearSubscribers[id] = _hx_tab_array({}, 0);
+  end;
+  Reflect.field(self.willAppearSubscribers, id):push(callback);
+end
 
 Math.new = {}
 Math.isNaN = function(f) 
@@ -544,6 +625,46 @@ Math.min = function(a,b)
     do return (0/0) end;
   else
     do return _G.math.min(a, b) end;
+  end;
+end
+
+Reflect.new = {}
+Reflect.field = function(o,field) 
+  if (_G.type(o) == "string") then 
+    if (field == "length") then 
+      do return _hx_wrap_if_string_field(o,'length') end;
+    else
+      do return String.prototype[field] end;
+    end;
+  else
+    local _hx_status, _hx_result = pcall(function() 
+    
+        do return o[field] end;
+      return _hx_pcall_default
+    end)
+    if not _hx_status and _hx_result == "_hx_pcall_break" then
+    elseif not _hx_status then 
+      local _g = _hx_result;
+      do return nil end;
+    elseif _hx_result ~= _hx_pcall_default then
+      return _hx_result
+    end;
+  end;
+end
+Reflect.fields = function(o) 
+  local _hx_continue_1 = false;
+  while (true) do repeat 
+    if (_G.type(o) == "string") then 
+      o = String.prototype;
+      break;
+    else
+      do return _hx_field_arr(o) end;
+    end;until true
+    if _hx_continue_1 then 
+    _hx_continue_1 = false;
+    break;
+    end;
+    
   end;
 end
 
@@ -736,29 +857,6 @@ Std.int = function(x)
   end;
 end
 
-__haxe_Log.new = {}
-__haxe_Log.formatOutput = function(v,infos) 
-  local str = Std.string(v);
-  if (infos == nil) then 
-    do return str end;
-  end;
-  local pstr = Std.string(Std.string(infos.fileName) .. Std.string(":")) .. Std.string(infos.lineNumber);
-  if (infos.customParams ~= nil) then 
-    local _g = 0;
-    local _g1 = infos.customParams;
-    while (_g < _g1.length) do 
-      local v = _g1[_g];
-      _g = _g + 1;
-      str = Std.string(str) .. Std.string((Std.string(", ") .. Std.string(Std.string(v))));
-    end;
-  end;
-  do return Std.string(Std.string(pstr) .. Std.string(": ")) .. Std.string(str) end;
-end
-__haxe_Log.trace = function(v,infos) 
-  local str = __haxe_Log.formatOutput(v, infos);
-  _hx_print(str);
-end
-
 __haxe_iterators_ArrayIterator.new = function(array) 
   local self = _hx_new(__haxe_iterators_ArrayIterator.prototype)
   __haxe_iterators_ArrayIterator.super(self,array)
@@ -820,10 +918,22 @@ end;
 _hx_array_mt.__index = Array.prototype
 
 local _hx_static_init = function()
+  StreamDeckButton.Events = _hx_o({__fields__={keyDown=true,willAppear=true,willDisappear=true,keyUp=true},keyDown="keyDown",willAppear="willAppear",willDisappear="willDisappear",keyUp="keyUp"});
+  
   
 end
 
-_hx_print = print or (function() end)
+_hx_wrap_if_string_field = function(o, fld)
+  if _G.type(o) == 'string' then
+    if fld == 'length' then
+      return _G.string.len(o)
+    else
+      return String.prototype[fld]
+    end
+  else
+    return o[fld]
+  end
+end
 
 _hx_static_init();
 return _hx_exports
