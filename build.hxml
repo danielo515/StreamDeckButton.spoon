@@ -1,5 +1,6 @@
+libs.hxml
 --macro nullSafety("Hammerspoon", Strict)
---macro nullSafety("StreamDeckButton", Strict)
+--macro nullSafety("streamDeckButton", Strict)
 
 -D analyzer-module
 -D analyzer-optimize
