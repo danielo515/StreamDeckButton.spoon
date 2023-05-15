@@ -202,7 +202,6 @@ local String = _hx_e()
 local Std = _hx_e()
 __haxe_iterators_ArrayIterator = _hx_e()
 __haxe_iterators_ArrayKeyValueIterator = _hx_e()
-__streamDeckButton__Main_Dict_Impl_ = _hx_e()
 __streamDeckButton__Main_StoredSettings_Impl_ = _hx_e()
 __streamDeckButton_StreamDeckButton = _hx_e()
 
@@ -800,18 +799,13 @@ __haxe_iterators_ArrayKeyValueIterator.super = function(self,array)
   self.array = array;
 end
 
-__streamDeckButton__Main_Dict_Impl_.new = {}
-__streamDeckButton__Main_Dict_Impl_.set = function(this1,key,value) 
-  this1[key] = value;
-end
-
 __streamDeckButton__Main_StoredSettings_Impl_.new = {}
 __streamDeckButton__Main_StoredSettings_Impl_.get = function(this1,key) 
   local _hx_continue_1 = false;
   while (true) do repeat 
     local value = Reflect.field(this1, key);
     if (value == nil) then 
-      this1[key] = _hx_e();
+      this1[key] = ({});
       break;
     end;
     do return value end;until true
@@ -854,7 +848,22 @@ __streamDeckButton_StreamDeckButton.prototype.getSettings = function(self)
 end
 __streamDeckButton_StreamDeckButton.prototype.storeInSettings = function(self,id,context) 
   local settings = self:getSettings();
-  __streamDeckButton__Main_Dict_Impl_.set(__streamDeckButton__Main_StoredSettings_Impl_.get(settings, id), context, context);
+  local value = Reflect.field(settings, id);
+  local this1;
+  if (value == nil) then 
+    settings[id] = ({});
+    local this2 = settings;
+    local value = Reflect.field(this2, id);
+    if (value == nil) then 
+      this2[id] = ({});
+      this1 = __streamDeckButton__Main_StoredSettings_Impl_.get(this2, id);
+    else
+      this1 = value;
+    end;
+  else
+    this1 = value;
+  end;
+  this1[context] = context;
   hs.settings.set(self.name, settings);
   self.logger.df("Settings: %s", Std.string(settings));
 end
@@ -865,7 +874,14 @@ __streamDeckButton_StreamDeckButton.prototype.init = function(self)
   while (_g < _g1.length) do 
     local id = _g1[_g];
     _g = _g + 1;
-    local contexts = __streamDeckButton__Main_StoredSettings_Impl_.get(settings, id);
+    local value = Reflect.field(settings, id);
+    local contexts;
+    if (value == nil) then 
+      settings[id] = ({});
+      contexts = __streamDeckButton__Main_StoredSettings_Impl_.get(settings, id);
+    else
+      contexts = value;
+    end;
     self.logger.df("Restoring context for id %s %s", id, Std.string(contexts));
     self.contexts[id] = contexts;
   end;
