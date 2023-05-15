@@ -1,3 +1,5 @@
+package streamDeckButton;
+
 import lua.Table;
 import lua.Table.create as t;
 import hammerspoon.Settings;
@@ -36,7 +38,7 @@ abstract StoredSettings(StringTable< Dict >) from StringTable< Dict > to StringT
   }
 
   @:arrayAccess
-  inline public function set(key:String, value:Dict):Void {
+  public function set(key:String, value:Dict):Void {
     Reflect.setField(this, key, value);
   }
 }

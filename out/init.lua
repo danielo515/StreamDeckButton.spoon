@@ -196,15 +196,15 @@ local Enum = _hx_e();
 
 local _hx_exports = _hx_exports or {}
 local Array = _hx_e()
-___Main_Dict_Impl_ = _hx_e()
-___Main_StoredSettings_Impl_ = _hx_e()
-local StreamDeckButton = _hx_e()
 local Math = _hx_e()
 local Reflect = _hx_e()
 local String = _hx_e()
 local Std = _hx_e()
 __haxe_iterators_ArrayIterator = _hx_e()
 __haxe_iterators_ArrayKeyValueIterator = _hx_e()
+__streamDeckButton__Main_Dict_Impl_ = _hx_e()
+__streamDeckButton__Main_StoredSettings_Impl_ = _hx_e()
+__streamDeckButton_StreamDeckButton = _hx_e()
 
 local _hx_bind, _hx_bit, _hx_staticToInstance, _hx_funcToField, _hx_maxn, _hx_print, _hx_apply_self, _hx_box_mr, _hx_bit_clamp, _hx_table, _hx_bit_raw
 local _hx_pcall_default = {};
@@ -520,95 +520,6 @@ Array.prototype.resize = function(self,len)
   end;
 end
 
-___Main_Dict_Impl_.new = {}
-___Main_Dict_Impl_.set = function(this1,key,value) 
-  this1[key] = value;
-end
-
-___Main_StoredSettings_Impl_.new = {}
-___Main_StoredSettings_Impl_.get = function(this1,key) 
-  local _hx_continue_1 = false;
-  while (true) do repeat 
-    local value = Reflect.field(this1, key);
-    if (value == nil) then 
-      this1[key] = _hx_e();
-      break;
-    end;
-    do return value end;until true
-    if _hx_continue_1 then 
-    _hx_continue_1 = false;
-    break;
-    end;
-    
-  end;
-end
-
-StreamDeckButton.new = function() 
-  local self = _hx_new(StreamDeckButton.prototype)
-  StreamDeckButton.super(self)
-  return self
-end
-StreamDeckButton.super = function(self) 
-  self.willAppearSubscribers = _hx_e();
-  self.keyDownSubscribers = _hx_e();
-  self.contexts = _hx_e();
-  self.logger = hs.logger.new("StreamDeckButton", "debug");
-  self.homepage = "https://github.com/danielo515/StreamDeckButton.spoon";
-  self.license = "MIT - https://opensource.org/licenses/MIT";
-  self.author = "Danielo Rodríguez <rdanielo@gmail.com>";
-  self.version = "3.0.0";
-  self.settingsPath = "streamDeckButton";
-  self.name = "StreamDeckButton";
-end
-_hx_exports["StreamDeckButton"] = StreamDeckButton
-StreamDeckButton.prototype = _hx_e();
-StreamDeckButton.prototype.getSettings = function(self) 
-  local readSettings = hs.settings.get(self.name);
-  do return (function() 
-    local _hx_1
-    if (readSettings ~= nil) then 
-    _hx_1 = readSettings; else 
-    _hx_1 = ({}); end
-    return _hx_1
-  end )() end
-end
-StreamDeckButton.prototype.storeInSettings = function(self,id,context) 
-  local settings = self:getSettings();
-  ___Main_Dict_Impl_.set(___Main_StoredSettings_Impl_.get(settings, id), context, context);
-  hs.settings.set(self.name, settings);
-  self.logger.df("Settings: %s", Std.string(settings));
-end
-StreamDeckButton.prototype.init = function(self) 
-  local settings = self:getSettings();
-  local _g = 0;
-  local _g1 = Reflect.fields(settings);
-  while (_g < _g1.length) do 
-    local id = _g1[_g];
-    _g = _g + 1;
-    local contexts = ___Main_StoredSettings_Impl_.get(settings, id);
-    self.logger.df("Restoring context for id %s %s", id, Std.string(contexts));
-    self.contexts[id] = contexts;
-  end;
-end
-StreamDeckButton.prototype.onKeyDown = function(self,id,callback) 
-  if ((id == nil) or (callback == nil)) then 
-    do return end;
-  end;
-  if (Reflect.field(self.keyDownSubscribers, id) == nil) then 
-    self.keyDownSubscribers[id] = _hx_tab_array({}, 0);
-  end;
-  Reflect.field(self.keyDownSubscribers, id):push(callback);
-end
-StreamDeckButton.prototype.onWillAppear = function(self,id,callback) 
-  if ((id == nil) or (callback == nil)) then 
-    do return end;
-  end;
-  if (Reflect.field(self.willAppearSubscribers, id) == nil) then 
-    self.willAppearSubscribers[id] = _hx_tab_array({}, 0);
-  end;
-  Reflect.field(self.willAppearSubscribers, id):push(callback);
-end
-
 Math.new = {}
 Math.isNaN = function(f) 
   do return f ~= f end;
@@ -888,6 +799,95 @@ end
 __haxe_iterators_ArrayKeyValueIterator.super = function(self,array) 
   self.array = array;
 end
+
+__streamDeckButton__Main_Dict_Impl_.new = {}
+__streamDeckButton__Main_Dict_Impl_.set = function(this1,key,value) 
+  this1[key] = value;
+end
+
+__streamDeckButton__Main_StoredSettings_Impl_.new = {}
+__streamDeckButton__Main_StoredSettings_Impl_.get = function(this1,key) 
+  local _hx_continue_1 = false;
+  while (true) do repeat 
+    local value = Reflect.field(this1, key);
+    if (value == nil) then 
+      this1[key] = _hx_e();
+      break;
+    end;
+    do return value end;until true
+    if _hx_continue_1 then 
+    _hx_continue_1 = false;
+    break;
+    end;
+    
+  end;
+end
+
+__streamDeckButton_StreamDeckButton.new = function() 
+  local self = _hx_new(__streamDeckButton_StreamDeckButton.prototype)
+  __streamDeckButton_StreamDeckButton.super(self)
+  return self
+end
+__streamDeckButton_StreamDeckButton.super = function(self) 
+  self.willAppearSubscribers = _hx_e();
+  self.keyDownSubscribers = _hx_e();
+  self.contexts = _hx_e();
+  self.logger = hs.logger.new("StreamDeckButton", "debug");
+  self.homepage = "https://github.com/danielo515/StreamDeckButton.spoon";
+  self.license = "MIT - https://opensource.org/licenses/MIT";
+  self.author = "Danielo Rodríguez <rdanielo@gmail.com>";
+  self.version = "3.0.0";
+  self.settingsPath = "streamDeckButton";
+  self.name = "StreamDeckButton";
+end
+_hx_exports["StreamDeckButton"] = __streamDeckButton_StreamDeckButton
+__streamDeckButton_StreamDeckButton.prototype = _hx_e();
+__streamDeckButton_StreamDeckButton.prototype.getSettings = function(self) 
+  local readSettings = hs.settings.get(self.name);
+  do return (function() 
+    local _hx_1
+    if (readSettings ~= nil) then 
+    _hx_1 = readSettings; else 
+    _hx_1 = ({}); end
+    return _hx_1
+  end )() end
+end
+__streamDeckButton_StreamDeckButton.prototype.storeInSettings = function(self,id,context) 
+  local settings = self:getSettings();
+  __streamDeckButton__Main_Dict_Impl_.set(__streamDeckButton__Main_StoredSettings_Impl_.get(settings, id), context, context);
+  hs.settings.set(self.name, settings);
+  self.logger.df("Settings: %s", Std.string(settings));
+end
+__streamDeckButton_StreamDeckButton.prototype.init = function(self) 
+  local settings = self:getSettings();
+  local _g = 0;
+  local _g1 = Reflect.fields(settings);
+  while (_g < _g1.length) do 
+    local id = _g1[_g];
+    _g = _g + 1;
+    local contexts = __streamDeckButton__Main_StoredSettings_Impl_.get(settings, id);
+    self.logger.df("Restoring context for id %s %s", id, Std.string(contexts));
+    self.contexts[id] = contexts;
+  end;
+end
+__streamDeckButton_StreamDeckButton.prototype.onKeyDown = function(self,id,callback) 
+  if ((id == nil) or (callback == nil)) then 
+    do return end;
+  end;
+  if (Reflect.field(self.keyDownSubscribers, id) == nil) then 
+    self.keyDownSubscribers[id] = _hx_tab_array({}, 0);
+  end;
+  Reflect.field(self.keyDownSubscribers, id):push(callback);
+end
+__streamDeckButton_StreamDeckButton.prototype.onWillAppear = function(self,id,callback) 
+  if ((id == nil) or (callback == nil)) then 
+    do return end;
+  end;
+  if (Reflect.field(self.willAppearSubscribers, id) == nil) then 
+    self.willAppearSubscribers[id] = _hx_tab_array({}, 0);
+  end;
+  Reflect.field(self.willAppearSubscribers, id):push(callback);
+end
 if _hx_bit_raw then
     _hx_bit_clamp = function(v)
     if v <= 2147483647 and v >= -2147483648 then
@@ -918,7 +918,7 @@ end;
 _hx_array_mt.__index = Array.prototype
 
 local _hx_static_init = function()
-  StreamDeckButton.Events = _hx_o({__fields__={keyDown=true,willAppear=true,willDisappear=true,keyUp=true},keyDown="keyDown",willAppear="willAppear",willDisappear="willDisappear",keyUp="keyUp"});
+  __streamDeckButton_StreamDeckButton.Events = _hx_o({__fields__={keyDown=true,willAppear=true,willDisappear=true,keyUp=true},keyDown="keyDown",willAppear="willAppear",willDisappear="willDisappear",keyUp="keyUp"});
   
   
 end

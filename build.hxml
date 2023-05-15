@@ -1,4 +1,5 @@
 --macro nullSafety("Hammerspoon", Strict)
+--macro nullSafety("StreamDeckButton", Strict)
 
 -D analyzer-module
 -D analyzer-optimize
@@ -18,5 +19,5 @@
 
 --each
 
-Main
+streamDeckButton.Main
 --lua out/init.lua
