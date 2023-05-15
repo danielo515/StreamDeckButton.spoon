@@ -4,7 +4,7 @@ import haxe.macro.Context.Message;
 import lua.Table;
 import lua.Table.create as t;
 import hammerspoon.Settings;
-import hammerspoon.Hammerspoon.Json;
+import hammerspoon.Json;
 import hammerspoon.Logger;
 import haxe.ds.StringMap;
 import haxe.ds.IntMap;
