@@ -36,11 +36,12 @@ abstract StoredSettings(StringTable< Dict >) from StringTable< Dict > to StringT
   }
 
   @:arrayAccess
-  public function set(key:String, value:Dynamic):Void {
+  inline public function set(key:String, value:Dict):Void {
     Reflect.setField(this, key, value);
   }
 }
 
+@:expose("StreamDeckButton")
 class StreamDeckButton {
   public static var Events = {
     keyDown: "keyDown",
