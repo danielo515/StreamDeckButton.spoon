@@ -936,8 +936,14 @@ end
 __streamDeckButton_StreamDeckButton.prototype.msgHandler = function(self,message) 
   self.logger.d("Received message");
   local params = __streamDeckButton__Messages_Messages_Fields_.parseMessage(message);
-  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/Main.hx",lineNumber=113,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
+  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/Main.hx",lineNumber=107,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
   do return "" end
+end
+__streamDeckButton_StreamDeckButton.prototype.setTitle = function(self,context,title) 
+  local _v_ = self.server;
+  if (_v_ ~= nil) then 
+    _v_:send(hs.json.encode(__streamDeckButton__Messages_Messages_Fields_.getTitleMessage(context, title)));
+  end;
 end
 
 __streamDeckButton__Messages_Messages_Fields_.new = {}
@@ -977,6 +983,9 @@ __streamDeckButton__Messages_Messages_Fields_.parseMessage = function(message)
     do return __haxe_ds_Either.Left(Std.string("Missing remoteServer: ") .. Std.string(message)) end;
   end;
   do return __haxe_ds_Either.Right(_hx_o({__fields__={event=true,context=true,payload=true},event=parsed.event,context=parsed.context,payload=_hx_o({__fields__={coordinates=true,isInMultiAction=true,settings=true},coordinates=_hx_o({__fields__={column=true,row=true},column=parsed.payload.coordinates.column,row=parsed.payload.coordinates.row}),isInMultiAction=parsed.payload.isInMultiAction,settings=_hx_o({__fields__={id=true,remoteServer=true},id=parsed.payload.settings.id,remoteServer=parsed.payload.settings.remoteServer})})})) end;
+end
+__streamDeckButton__Messages_Messages_Fields_.getTitleMessage = function(context,title) 
+  do return ({event = "setTitle", context = context, payload = ({title = title, target = 0})}) end;
 end
 if _hx_bit_raw then
     _hx_bit_clamp = function(v)

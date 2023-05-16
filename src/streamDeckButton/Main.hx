@@ -1,5 +1,6 @@
 package streamDeckButton;
 
+import hammerspoon.Hammerspoon.HttpServer;
 import lua.Table;
 import lua.Table.create as t;
 import hammerspoon.Settings;
@@ -53,15 +54,8 @@ class StreamDeckButton {
   public final homepage:String = "https://github.com/danielo515/StreamDeckButton.spoon";
   public final logger = Logger.make("StreamDeckButton", "debug");
   public final contexts:DynamicAccess< Dynamic > = new DynamicAccess< Dynamic >();
+  public var server:Null< HttpServer >;
 
-  // TODO: Implement the following functions as separate Haxe modules:
-  // - utilities.getValueForKeyPath
-  // - msg.getImageMessage
-  // - msg.getTitleMessage
-  // - msg.showOkMessage
-  //  public var getImageMessage:Dynamic;
-  // public var getTitleMessage:Dynamic;
-  // public var showOkMessage:Dynamic;
   public var keyDownSubscribers:DynamicAccess< Array< Dynamic > > = new DynamicAccess< Array< Dynamic > >();
   public var willAppearSubscribers:DynamicAccess< Array< Dynamic > > = new DynamicAccess< Array< Dynamic > >();
 
@@ -111,24 +105,6 @@ class StreamDeckButton {
     logger.d("Received message");
     var params = Messages.parseMessage(message);
     trace(params);
-    // if (params == null) {
-    //   logger.e("params is nil");
-    //   logger.d("message: " + message);
-    //   return null;
-    // }
-    // logger.d("decoded message: " + Std.string(params));
-    //
-    // var event = params.event;
-    // if (event == null) {
-    //   logger.e("event is nil");
-    //   return null;
-    // }
-    //
-    // var id = params.payload!.settings!.id;
-    // if (id == null) {
-    //   logger.e("id is nil");
-    //   return null;
-    // }
     // if (contexts[id] == null) {
     //   logger.f("new id found: %s with this context: %s", id, params.context);
     //   setTitle(id, "Not loaded", params.context);
@@ -165,6 +141,10 @@ class StreamDeckButton {
     //
     // return Json.encode(response);
     return "";
+  }
+
+  public function setTitle(context:String, title:String) {
+    server!.send(Json.encode(Messages.getTitleMessage(context, title)));
   }
 
   // TODO: Implement the following methods using the Haxe modules mentioned above:

@@ -1,6 +1,7 @@
 libs.hxml
 --macro nullSafety("Hammerspoon", Strict)
 --macro nullSafety("streamDeckButton", Strict)
+--macro Safety.safeNavigation("", true)
 
 -D analyzer-module
 -D analyzer-optimize
