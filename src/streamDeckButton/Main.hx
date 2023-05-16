@@ -6,8 +6,6 @@ import lua.Table.create as t;
 import hammerspoon.Settings;
 import hammerspoon.Json;
 import hammerspoon.Logger;
-import haxe.ds.StringMap;
-import haxe.ds.IntMap;
 import haxe.DynamicAccess;
 
 typedef StringTable< T > = Table< String, T >;
@@ -53,7 +51,7 @@ class StreamDeckButton {
   public final license:String = "MIT - https://opensource.org/licenses/MIT";
   public final homepage:String = "https://github.com/danielo515/StreamDeckButton.spoon";
   public final logger = Logger.make("StreamDeckButton", "debug");
-  public final contexts:DynamicAccess< Dynamic > = new DynamicAccess< Dynamic >();
+  public var contexts:Null< State > = null;
   public var server:Null< HttpServer >;
 
   public var keyDownSubscribers:DynamicAccess< Array< Dynamic > > = new DynamicAccess< Array< Dynamic > >();
@@ -73,12 +71,7 @@ class StreamDeckButton {
   }
 
   public function init():Void {
-    var settings = getSettings();
-    for (id in Reflect.fields(settings)) {
-      var contexts = settings[id];
-      logger.df("Restoring context for id %s %s", id, Std.string(contexts));
-      this.contexts[id] = contexts;
-    }
+    contexts = State.getInstance();
   }
 
   public function onKeyDown(id:String, callback:Dynamic -> Dynamic -> Void):Void {
@@ -147,9 +140,38 @@ class StreamDeckButton {
     server!.send(Json.encode(Messages.getTitleMessage(context, title)));
   }
 
+  /**
+    StreamDeckButton.setImage(id, imagePath)
+    Method
+    Sets the image for a specific button
+
+    Parameters:
+    * id - The identifier for the button
+    * imagePath - The path to the image to set
+  **/
+  public function setImage(id:String, imagePath:String) {
+    if (id == null || !contexts!.exists(id).or(false)) {
+      logger.e("setImage: id is null or contexts[id] is null", id);
+      return;
+    }
+    contexts.run(ctx -> {
+      final ctxs = ctx.get(id);
+      if (ctxs == null) {
+        logger.e("setImage for %s leads to no context", id);
+        return;
+      }
+      for (context in ctxs) {
+        var message = Messages.getImageMessage(context, imagePath);
+        if (message == null) {
+          logger.e("Error generating image message for %s", imagePath);
+          return;
+        }
+        server!.send(Json.encode(message));
+      }
+    });
+  }
+
   // TODO: Implement the following methods using the Haxe modules mentioned above:
-  // - setTitle
-  // - setImage
   // - start
   // - stop
 }
