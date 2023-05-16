@@ -200,10 +200,13 @@ local Math = _hx_e()
 local Reflect = _hx_e()
 local String = _hx_e()
 local Std = _hx_e()
+__haxe_Log = _hx_e()
+__haxe_ds_Either = _hx_e()
 __haxe_iterators_ArrayIterator = _hx_e()
 __haxe_iterators_ArrayKeyValueIterator = _hx_e()
 __streamDeckButton__Main_StoredSettings_Impl_ = _hx_e()
 __streamDeckButton_StreamDeckButton = _hx_e()
+__streamDeckButton__Messages_Messages_Fields_ = _hx_e()
 
 local _hx_bind, _hx_bit, _hx_staticToInstance, _hx_funcToField, _hx_maxn, _hx_print, _hx_apply_self, _hx_box_mr, _hx_bit_clamp, _hx_table, _hx_bit_raw
 local _hx_pcall_default = {};
@@ -767,6 +770,32 @@ Std.int = function(x)
   end;
 end
 
+__haxe_Log.new = {}
+__haxe_Log.formatOutput = function(v,infos) 
+  local str = Std.string(v);
+  if (infos == nil) then 
+    do return str end;
+  end;
+  local pstr = Std.string(Std.string(infos.fileName) .. Std.string(":")) .. Std.string(infos.lineNumber);
+  if (infos.customParams ~= nil) then 
+    local _g = 0;
+    local _g1 = infos.customParams;
+    while (_g < _g1.length) do 
+      local v = _g1[_g];
+      _g = _g + 1;
+      str = Std.string(str) .. Std.string((Std.string(", ") .. Std.string(Std.string(v))));
+    end;
+  end;
+  do return Std.string(Std.string(pstr) .. Std.string(": ")) .. Std.string(str) end;
+end
+__haxe_Log.trace = function(v,infos) 
+  local str = __haxe_Log.formatOutput(v, infos);
+  _hx_print(str);
+end
+
+__haxe_ds_Either.Left = function(v) local _x = _hx_tab_array({[0]="Left",0,v,__enum__=__haxe_ds_Either}, 3); return _x; end 
+__haxe_ds_Either.Right = function(v) local _x = _hx_tab_array({[0]="Right",1,v,__enum__=__haxe_ds_Either}, 3); return _x; end 
+
 __haxe_iterators_ArrayIterator.new = function(array) 
   local self = _hx_new(__haxe_iterators_ArrayIterator.prototype)
   __haxe_iterators_ArrayIterator.super(self,array)
@@ -904,6 +933,51 @@ __streamDeckButton_StreamDeckButton.prototype.onWillAppear = function(self,id,ca
   end;
   Reflect.field(self.willAppearSubscribers, id):push(callback);
 end
+__streamDeckButton_StreamDeckButton.prototype.msgHandler = function(self,message) 
+  self.logger.d("Received message");
+  local params = __streamDeckButton__Messages_Messages_Fields_.parseMessage(message);
+  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/Main.hx",lineNumber=113,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
+  do return "" end
+end
+
+__streamDeckButton__Messages_Messages_Fields_.new = {}
+__streamDeckButton__Messages_Messages_Fields_.parseMessage = function(message) 
+  local parsed = hs.json.decode(message);
+  if (parsed == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Invalid JSON: ") .. Std.string(message)) end;
+  end;
+  if (parsed.event == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Missing event: ") .. Std.string(message)) end;
+  end;
+  if (parsed.context == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Missing context: ") .. Std.string(message)) end;
+  end;
+  if (parsed.payload == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Missing payload: ") .. Std.string(message)) end;
+  end;
+  if (parsed.payload.coordinates == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Missing coordinates: ") .. Std.string(message)) end;
+  end;
+  if (parsed.payload.coordinates.column == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Missing column: ") .. Std.string(message)) end;
+  end;
+  if (parsed.payload.coordinates.row == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Missing row: ") .. Std.string(message)) end;
+  end;
+  if (parsed.payload.isInMultiAction == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Missing isInMultiAction: ") .. Std.string(message)) end;
+  end;
+  if (parsed.payload.settings == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Missing settings: ") .. Std.string(message)) end;
+  end;
+  if (parsed.payload.settings.id == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Missing id: ") .. Std.string(message)) end;
+  end;
+  if (parsed.payload.settings.remoteServer == nil) then 
+    do return __haxe_ds_Either.Left(Std.string("Missing remoteServer: ") .. Std.string(message)) end;
+  end;
+  do return __haxe_ds_Either.Right(_hx_o({__fields__={event=true,context=true,payload=true},event=parsed.event,context=parsed.context,payload=_hx_o({__fields__={coordinates=true,isInMultiAction=true,settings=true},coordinates=_hx_o({__fields__={column=true,row=true},column=parsed.payload.coordinates.column,row=parsed.payload.coordinates.row}),isInMultiAction=parsed.payload.isInMultiAction,settings=_hx_o({__fields__={id=true,remoteServer=true},id=parsed.payload.settings.id,remoteServer=parsed.payload.settings.remoteServer})})})) end;
+end
 if _hx_bit_raw then
     _hx_bit_clamp = function(v)
     if v <= 2147483647 and v >= -2147483648 then
@@ -934,10 +1008,10 @@ end;
 _hx_array_mt.__index = Array.prototype
 
 local _hx_static_init = function()
-  __streamDeckButton_StreamDeckButton.Events = _hx_o({__fields__={keyDown=true,willAppear=true,willDisappear=true,keyUp=true},keyDown="keyDown",willAppear="willAppear",willDisappear="willDisappear",keyUp="keyUp"});
-  
   
 end
+
+_hx_print = print or (function() end)
 
 _hx_wrap_if_string_field = function(o, fld)
   if _G.type(o) == 'string' then

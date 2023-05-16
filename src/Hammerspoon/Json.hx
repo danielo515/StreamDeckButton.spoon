@@ -14,7 +14,7 @@ extern class Json {
    * Notes:
    *  * This is useful for retrieving some of the more complex lua table structures as a persistent setting (see `hs.settings`)
    */
-  @:luaDotMethod static public function decode(jsonString:String):Dynamic;
+  @:luaDotMethod static public function decode(jsonString:String):Null< Dynamic >;
 
   /**
    * Encodes a table as JSON
