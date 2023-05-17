@@ -2396,6 +2396,8 @@ __streamDeckButton_StreamDeckButton.super = function(self)
 end
 _hx_exports["StreamDeckButton"] = __streamDeckButton_StreamDeckButton
 __streamDeckButton_StreamDeckButton.__name__ = true
+__streamDeckButton_StreamDeckButton.init = function() 
+end
 __streamDeckButton_StreamDeckButton.prototype = _hx_e();
 __streamDeckButton_StreamDeckButton.prototype.getSettings = function(self) 
   local readSettings = hs.settings.get(self.name);
@@ -2428,9 +2430,6 @@ __streamDeckButton_StreamDeckButton.prototype.storeInSettings = function(self,id
   hs.settings.set(self.name, settings);
   self.logger.df("Settings: %s", Std.string(settings));
 end
-__streamDeckButton_StreamDeckButton.prototype.init = function(self) 
-  self.contexts = __streamDeckButton_State.getInstance();
-end
 __streamDeckButton_StreamDeckButton.prototype.onKeyDown = function(self,id,callback) 
   if ((id == nil) or (callback == nil)) then 
     do return end;
@@ -2452,16 +2451,26 @@ end
 __streamDeckButton_StreamDeckButton.prototype.msgHandler = function(self,message) 
   self.logger.d("Received message");
   local params = __streamDeckButton__Messages_Messages_Fields_.parseMessage(message);
-  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/Main.hx",lineNumber=100,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
+  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/Main.hx",lineNumber=98,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
   local tmp = params[1];
   if (tmp) == 0 then 
     self.logger.e("Error parsing message: %s", params[2]);
     do return "" end;
   elseif (tmp) == 1 then 
     local _g = params[2];
-    local _v_ = self.contexts;
-    if (_v_ ~= nil) then 
-      _v_:addContext(_g.payload.settings.id, _g.context);
+    local _g1 = _g.context;
+    local _g = _g.payload.settings;
+    if (self.contexts == nil) then 
+      self.logger.e("Contexts is null");
+      do return "" end;
+    end;
+    local value = self.contexts;
+    if (value ~= nil) then 
+      if (not value:exists(_g.id)) then 
+        self:setTitle(_g1, "Initializing");
+        self.logger.f("new id found: %s with this context: %s", _g.id, _g1);
+      end;
+      value:addContext(_g.id, _g1);
     end; end;
   do return "" end
 end
@@ -2518,6 +2527,21 @@ __streamDeckButton_StreamDeckButton.prototype.setImage = function(self,id,imageP
         end;
       end;
     end)(value);
+  end;
+end
+__streamDeckButton_StreamDeckButton.prototype.start = function(self,port) 
+  self.contexts = __streamDeckButton_State.getInstance();
+  self.server = hs.httpserver.new(false, true);
+  local value = self.server;
+  if (value ~= nil) then 
+    value:setPort(port);
+    value:setName(self.name);
+    value:setCallback(function() 
+      do return "" end;
+    end);
+    value:websocket("/ws", _hx_bind(self,self.msgHandler));
+    value:start();
+    self.logger.f("Server started %s", value);
   end;
 end
 

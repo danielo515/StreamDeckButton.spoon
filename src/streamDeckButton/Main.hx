@@ -70,9 +70,7 @@ class StreamDeckButton {
     logger.df("Settings: %s", Std.string(settings));
   }
 
-  public function init():Void {
-    contexts = State.getInstance();
-  }
+  static public function init():Void {}
 
   public function onKeyDown(id:String, callback:Dynamic -> Dynamic -> Void):Void {
     if (id == null || callback == null) {
@@ -103,23 +101,18 @@ class StreamDeckButton {
         logger.e("Error parsing message: %s", error);
         return "";
       case Right({payload: {settings: s}, context: ctx}):
-        contexts!.addContext(s.id, ctx);
+        if (contexts == null) {
+          logger.e("Contexts is null");
+          return "";
+        }
+        contexts.run(contexts -> {
+          if (!contexts.exists(s.id)) {
+            setTitle(ctx, "Initializing");
+            logger.f("new id found: %s with this context: %s", s.id, ctx);
+          }
+          contexts.addContext(s.id, ctx);
+        });
     }
-    // if (contexts[id] == null) {
-    //   logger.f("new id found: %s with this context: %s", id, params.context);
-    //   setTitle(id, "Not loaded", params.context);
-    //   contexts[id] = {
-    //     [params.context] = true;
-    //   };
-    // }
-    // contexts[id][params.context] = true;
-    // storeInSettings(id, params.context);
-    //
-    // if (contexts[id] == null) {
-    //   logger.e("contexts[id] is nil for id: %s", id);
-    //   return null;
-    // }
-    //
     // var response = {};
     // if (event == "keyDown") {
     //   if (keyDownSubscribers.exists(id)) {
@@ -178,7 +171,19 @@ class StreamDeckButton {
     });
   }
 
+  public function start(port:Int) {
+    contexts = State.getInstance();
+    server = HttpServer.make(false, true);
+    server.apply(server -> {
+      server.setPort(port);
+      server.setName(name);
+      server.setCallback(() -> "");
+      server.websocket('/ws', msgHandler);
+      server.start();
+      logger.f("Server started %s", server);
+    });
+  }
+
   // TODO: Implement the following methods using the Haxe modules mentioned above:
-  // - start
   // - stop
 }

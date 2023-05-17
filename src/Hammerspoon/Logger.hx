@@ -79,7 +79,7 @@ extern class Logger {
    * Returns:
    *  * None
    */
-  @:luaDotMethod public function f(fmt:String, ...params:String):Void;
+  @:luaDotMethod public function f(fmt:String, ...params:Dynamic):Void;
 
   /**
    * Gets the log level of the logger instance
