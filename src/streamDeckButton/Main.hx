@@ -98,6 +98,13 @@ class StreamDeckButton {
     logger.d("Received message");
     var params = Messages.parseMessage(message);
     trace(params);
+    switch (params) {
+      case Left(error):
+        logger.e("Error parsing message: %s", error);
+        return "";
+      case Right({payload: {settings: s}, context: ctx}):
+        contexts!.addContext(s.id, ctx);
+    }
     // if (contexts[id] == null) {
     //   logger.f("new id found: %s with this context: %s", id, params.context);
     //   setTitle(id, "Not loaded", params.context);
@@ -151,19 +158,19 @@ class StreamDeckButton {
   **/
   public function setImage(id:String, imagePath:String) {
     if (id == null || !contexts!.exists(id).or(false)) {
-      logger.e("setImage: id is null or contexts[id] is null", id);
+      logger.ef("setImage: id is null or contexts[id] is null", id);
       return;
     }
     contexts.run(ctx -> {
       final ctxs = ctx.get(id);
       if (ctxs == null) {
-        logger.e("setImage for %s leads to no context", id);
+        logger.ef("setImage for %s leads to no context", id);
         return;
       }
       for (context in ctxs) {
         var message = Messages.getImageMessage(context, imagePath);
         if (message == null) {
-          logger.e("Error generating image message for %s", imagePath);
+          logger.ef("Error generating image message for %s", imagePath);
           return;
         }
         server!.send(Json.encode(message));

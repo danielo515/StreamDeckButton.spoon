@@ -1,15 +1,18 @@
 package streamDeckButton;
 
+import hammerspoon.Json;
 import lua.StringMap;
-import haxe.Unserializer;
-import haxe.Serializer;
 import hammerspoon.Settings;
+import json2object.JsonWriter;
+import json2object.JsonParser;
 
 typedef Data = StringMap< StringMap< String > >;
 
 class State {
   private static var inst:Null< State > = null;
   private static final namespace = 'StreamDeckButton-hx';
+  private static final jsonWritter = new JsonWriter< Data >();
+  private static final jsonReader = new JsonParser< Data >();
 
   public final data:Data;
 
@@ -32,14 +35,15 @@ class State {
     final parsedData = if (rawData == null) {
       new StringMap< StringMap< String > >();
     } else {
-      Unserializer.run(rawData);
+      jsonReader.fromJson(rawData, 'settings');
     };
     inst = new State(parsedData);
     return inst;
   }
 
   public function store() {
-    Settings.set(namespace, Serializer.run(data));
+    Settings.set(namespace, jsonWritter.write(data));
+    trace('Saved it');
   }
 
   public function get(id:String) {
