@@ -942,20 +942,27 @@ __streamDeckButton_State.init = function()
     do return __streamDeckButton_State.inst end;
   end;
   local rawData = hs.settings.get(__streamDeckButton_State.namespace);
-  __streamDeckButton_State.inst = __streamDeckButton_State.new((function() 
-    local _hx_1
-    if (rawData == nil) then 
-    _hx_1 = ({}); else 
-    _hx_1 = rawData; end
-    return _hx_1
-  end )());
+  local parsedData;
+  if (rawData == nil) then 
+    parsedData = ({});
+  else
+    local parsedData1 = hs.json.decode(rawData);
+    parsedData = (function() 
+      local _hx_1
+      if (parsedData1 == nil) then 
+      _hx_1 = ({}); else 
+      _hx_1 = parsedData1; end
+      return _hx_1
+    end )();
+  end;
+  __streamDeckButton_State.inst = __streamDeckButton_State.new(parsedData);
   do return __streamDeckButton_State.inst end;
 end
 __streamDeckButton_State.prototype = _hx_e();
 __streamDeckButton_State.prototype.store = function(self) 
   local jsonData = hs.json.encode(self.data);
   hs.settings.set(__streamDeckButton_State.namespace, jsonData);
-  __haxe_Log.trace("Saved it:", _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true,customParams=true},fileName="src/streamDeckButton/State.hx",lineNumber=41,className="streamDeckButton.State",methodName="store",customParams=_hx_tab_array({[0]=jsonData}, 1)}));
+  __haxe_Log.trace("Saved it:", _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true,customParams=true},fileName="src/streamDeckButton/State.hx",lineNumber=47,className="streamDeckButton.State",methodName="store",customParams=_hx_tab_array({[0]=jsonData}, 1)}));
 end
 __streamDeckButton_State.prototype.get = function(self,id) 
   local this1 = self.data;

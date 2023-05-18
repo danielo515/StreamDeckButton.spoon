@@ -1,5 +1,6 @@
 package streamDeckButton;
 
+import hammerspoon.Json;
 import streamDeckButton.Data.StoredSettings;
 import lua.Table.create as t;
 import hammerspoon.Settings;
@@ -27,11 +28,16 @@ class State {
     }
     final rawData = Settings.get(namespace);
     final parsedData = if (rawData == null) {
-      new StoredSettings(t({}));
+      (t({}));
     } else {
-      new StoredSettings(rawData);
+      final parsedData = Json.decode(rawData);
+      if (parsedData == null) {
+        (t({}));
+      } else {
+        parsedData;
+      }
     };
-    inst = new State(parsedData);
+    inst = new State(new StoredSettings(parsedData));
     return inst;
   }
 

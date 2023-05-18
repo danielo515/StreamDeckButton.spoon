@@ -50,7 +50,7 @@ abstract Dict(StringTable< String >) from StringTable< String > to StringTable< 
   Compiles to clean lua
  */
 abstract StoredSettings(StringTable< Dict >) from StringTable< Dict > to StringTable< Dict > {
-  inline public function new(args) {
+  inline public function new(args:StringTable< Dict >) {
     this = args;
   }
 
