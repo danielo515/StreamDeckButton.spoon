@@ -229,11 +229,11 @@ __lua_Boot = _hx_e()
 __lua_UserData = _hx_e()
 __lua_StringMap = _hx_e()
 __lua_Thread = _hx_e()
-__streamDeckButton__Main_StoredSettings_Impl_ = _hx_e()
-__streamDeckButton_StreamDeckButton = _hx_e()
 __streamDeckButton_Utils = _hx_e()
 __streamDeckButton__Messages_Messages_Fields_ = _hx_e()
 __streamDeckButton_State = _hx_e()
+__streamDeckButton__StreamDeckButton_StoredSettings_Impl_ = _hx_e()
+__streamDeckButton_StreamDeckButton = _hx_e()
 
 local _hx_bind, _hx_bit, _hx_staticToInstance, _hx_funcToField, _hx_maxn, _hx_print, _hx_apply_self, _hx_box_mr, _hx_bit_clamp, _hx_table, _hx_bit_raw
 local _hx_pcall_default = {};
@@ -2358,195 +2358,6 @@ __lua_StringMap.prototype.__class__ =  __lua_StringMap
 __lua_Thread.new = {}
 __lua_Thread.__name__ = true
 
-__streamDeckButton__Main_StoredSettings_Impl_.new = {}
-__streamDeckButton__Main_StoredSettings_Impl_.__name__ = true
-__streamDeckButton__Main_StoredSettings_Impl_.get = function(this1,key) 
-  local _hx_continue_1 = false;
-  while (true) do repeat 
-    local value = Reflect.field(this1, key);
-    if (value == nil) then 
-      this1[key] = ({});
-      break;
-    end;
-    do return value end;until true
-    if _hx_continue_1 then 
-    _hx_continue_1 = false;
-    break;
-    end;
-    
-  end;
-end
-
-__streamDeckButton_StreamDeckButton.new = function() 
-  local self = _hx_new(__streamDeckButton_StreamDeckButton.prototype)
-  __streamDeckButton_StreamDeckButton.super(self)
-  return self
-end
-__streamDeckButton_StreamDeckButton.super = function(self) 
-  self.willAppearSubscribers = _hx_e();
-  self.keyDownSubscribers = _hx_e();
-  self.contexts = nil;
-  self.logger = hs.logger.new("StreamDeckButton", "debug");
-  self.homepage = "https://github.com/danielo515/StreamDeckButton.spoon";
-  self.license = "MIT - https://opensource.org/licenses/MIT";
-  self.author = "Danielo Rodríguez <rdanielo@gmail.com>";
-  self.version = "3.0.0";
-  self.settingsPath = "streamDeckButton";
-  self.name = "StreamDeckButton";
-end
-_hx_exports["StreamDeckButton"] = __streamDeckButton_StreamDeckButton
-__streamDeckButton_StreamDeckButton.__name__ = true
-__streamDeckButton_StreamDeckButton.init = function() 
-end
-__streamDeckButton_StreamDeckButton.prototype = _hx_e();
-__streamDeckButton_StreamDeckButton.prototype.getSettings = function(self) 
-  local readSettings = hs.settings.get(self.name);
-  do return (function() 
-    local _hx_1
-    if (readSettings ~= nil) then 
-    _hx_1 = readSettings; else 
-    _hx_1 = ({}); end
-    return _hx_1
-  end )() end
-end
-__streamDeckButton_StreamDeckButton.prototype.storeInSettings = function(self,id,context) 
-  local settings = self:getSettings();
-  local value = Reflect.field(settings, id);
-  local this1;
-  if (value == nil) then 
-    settings[id] = ({});
-    local this2 = settings;
-    local value = Reflect.field(this2, id);
-    if (value == nil) then 
-      this2[id] = ({});
-      this1 = __streamDeckButton__Main_StoredSettings_Impl_.get(this2, id);
-    else
-      this1 = value;
-    end;
-  else
-    this1 = value;
-  end;
-  this1[context] = context;
-  hs.settings.set(self.name, settings);
-  self.logger.df("Settings: %s", Std.string(settings));
-end
-__streamDeckButton_StreamDeckButton.prototype.onKeyDown = function(self,id,callback) 
-  if ((id == nil) or (callback == nil)) then 
-    do return end;
-  end;
-  if (Reflect.field(self.keyDownSubscribers, id) == nil) then 
-    self.keyDownSubscribers[id] = _hx_tab_array({}, 0);
-  end;
-  Reflect.field(self.keyDownSubscribers, id):push(callback);
-end
-__streamDeckButton_StreamDeckButton.prototype.onWillAppear = function(self,id,callback) 
-  if ((id == nil) or (callback == nil)) then 
-    do return end;
-  end;
-  if (Reflect.field(self.willAppearSubscribers, id) == nil) then 
-    self.willAppearSubscribers[id] = _hx_tab_array({}, 0);
-  end;
-  Reflect.field(self.willAppearSubscribers, id):push(callback);
-end
-__streamDeckButton_StreamDeckButton.prototype.msgHandler = function(self,message) 
-  self.logger.d("Received message");
-  local params = __streamDeckButton__Messages_Messages_Fields_.parseMessage(message);
-  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/Main.hx",lineNumber=98,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
-  local tmp = params[1];
-  if (tmp) == 0 then 
-    self.logger.e("Error parsing message: %s", params[2]);
-    do return "" end;
-  elseif (tmp) == 1 then 
-    local _g = params[2];
-    local _g1 = _g.context;
-    local _g = _g.payload.settings;
-    if (self.contexts == nil) then 
-      self.logger.e("Contexts is null");
-      do return "" end;
-    end;
-    local value = self.contexts;
-    if (value ~= nil) then 
-      if (not value:exists(_g.id)) then 
-        self:setTitle(_g1, "Initializing");
-        self.logger.f("new id found: %s with this context: %s", _g.id, _g1);
-      end;
-      value:addContext(_g.id, _g1);
-    end; end;
-  do return "" end
-end
-__streamDeckButton_StreamDeckButton.prototype.setTitle = function(self,context,title) 
-  local _v_ = self.server;
-  if (_v_ ~= nil) then 
-    _v_:send(hs.json.encode(__streamDeckButton__Messages_Messages_Fields_.getTitleMessage(context, title)));
-  end;
-end
-__streamDeckButton_StreamDeckButton.prototype.setImage = function(self,id,imagePath) 
-  local _gthis = self;
-  local tmp;
-  if (id ~= nil) then 
-    local _v_ = self.contexts;
-    local value = (function() 
-      local _hx_1
-      if (_v_ == nil) then 
-      _hx_1 = nil; else 
-      _hx_1 = _v_:exists(id); end
-      return _hx_1
-    end )();
-    tmp = not ((function() 
-      local _hx_2
-      if (value == nil) then 
-      _hx_2 = false; else 
-      _hx_2 = value; end
-      return _hx_2
-    end )());
-  else
-    tmp = true;
-  end;
-  if (tmp) then 
-    self.logger.ef("setImage: id is null or contexts[id] is null", id);
-    do return end;
-  end;
-  local value = self.contexts;
-  if (value ~= nil) then 
-    (function(ctx) 
-      local ctxs = ctx:get(id);
-      if (ctxs == nil) then 
-        _gthis.logger.ef("setImage for %s leads to no context", id);
-        do return end;
-      end;
-      local context = ctxs:iterator();
-      while (context:hasNext()) do 
-        local message = __streamDeckButton__Messages_Messages_Fields_.getImageMessage(context:next(), imagePath);
-        if (message == nil) then 
-          _gthis.logger.ef("Error generating image message for %s", imagePath);
-          do return end;
-        end;
-        local _v_ = _gthis.server;
-        if (_v_ ~= nil) then 
-          _v_:send(hs.json.encode(message));
-        end;
-      end;
-    end)(value);
-  end;
-end
-__streamDeckButton_StreamDeckButton.prototype.start = function(self,port) 
-  self.contexts = __streamDeckButton_State.getInstance();
-  self.server = hs.httpserver.new(false, true);
-  local value = self.server;
-  if (value ~= nil) then 
-    value:setPort(port);
-    value:setName(self.name);
-    value:setCallback(function() 
-      do return "" end;
-    end);
-    value:websocket("/ws", _hx_bind(self,self.msgHandler));
-    value:start();
-    self.logger.f("Server started %s", value);
-  end;
-end
-
-__streamDeckButton_StreamDeckButton.prototype.__class__ =  __streamDeckButton_StreamDeckButton
-
 __streamDeckButton_Utils.new = {}
 __streamDeckButton_Utils.__name__ = true
 __streamDeckButton_Utils.loadImageAsBase64 = function(imagePath) 
@@ -2664,6 +2475,195 @@ __streamDeckButton_State.prototype.addContext = function(self,id,context)
 end
 
 __streamDeckButton_State.prototype.__class__ =  __streamDeckButton_State
+
+__streamDeckButton__StreamDeckButton_StoredSettings_Impl_.new = {}
+__streamDeckButton__StreamDeckButton_StoredSettings_Impl_.__name__ = true
+__streamDeckButton__StreamDeckButton_StoredSettings_Impl_.get = function(this1,key) 
+  local _hx_continue_1 = false;
+  while (true) do repeat 
+    local value = Reflect.field(this1, key);
+    if (value == nil) then 
+      this1[key] = ({});
+      break;
+    end;
+    do return value end;until true
+    if _hx_continue_1 then 
+    _hx_continue_1 = false;
+    break;
+    end;
+    
+  end;
+end
+
+__streamDeckButton_StreamDeckButton.new = function() 
+  local self = _hx_new(__streamDeckButton_StreamDeckButton.prototype)
+  __streamDeckButton_StreamDeckButton.super(self)
+  return self
+end
+__streamDeckButton_StreamDeckButton.super = function(self) 
+  self.willAppearSubscribers = _hx_e();
+  self.keyDownSubscribers = _hx_e();
+  self.contexts = nil;
+  self.logger = hs.logger.new("StreamDeckButton", "debug");
+  self.homepage = "https://github.com/danielo515/StreamDeckButton.spoon";
+  self.license = "MIT - https://opensource.org/licenses/MIT";
+  self.author = "Danielo Rodríguez <rdanielo@gmail.com>";
+  self.version = "3.0.0";
+  self.settingsPath = "streamDeckButton";
+  self.name = "StreamDeckButton";
+end
+_hx_exports["StreamDeckButton"] = __streamDeckButton_StreamDeckButton
+__streamDeckButton_StreamDeckButton.__name__ = true
+__streamDeckButton_StreamDeckButton.init = function() 
+end
+__streamDeckButton_StreamDeckButton.prototype = _hx_e();
+__streamDeckButton_StreamDeckButton.prototype.getSettings = function(self) 
+  local readSettings = hs.settings.get(self.name);
+  do return (function() 
+    local _hx_1
+    if (readSettings ~= nil) then 
+    _hx_1 = readSettings; else 
+    _hx_1 = ({}); end
+    return _hx_1
+  end )() end
+end
+__streamDeckButton_StreamDeckButton.prototype.storeInSettings = function(self,id,context) 
+  local settings = self:getSettings();
+  local value = Reflect.field(settings, id);
+  local this1;
+  if (value == nil) then 
+    settings[id] = ({});
+    local this2 = settings;
+    local value = Reflect.field(this2, id);
+    if (value == nil) then 
+      this2[id] = ({});
+      this1 = __streamDeckButton__StreamDeckButton_StoredSettings_Impl_.get(this2, id);
+    else
+      this1 = value;
+    end;
+  else
+    this1 = value;
+  end;
+  this1[context] = context;
+  hs.settings.set(self.name, settings);
+  self.logger.df("Settings: %s", Std.string(settings));
+end
+__streamDeckButton_StreamDeckButton.prototype.onKeyDown = function(self,id,callback) 
+  if ((id == nil) or (callback == nil)) then 
+    do return end;
+  end;
+  if (Reflect.field(self.keyDownSubscribers, id) == nil) then 
+    self.keyDownSubscribers[id] = _hx_tab_array({}, 0);
+  end;
+  Reflect.field(self.keyDownSubscribers, id):push(callback);
+end
+__streamDeckButton_StreamDeckButton.prototype.onWillAppear = function(self,id,callback) 
+  if ((id == nil) or (callback == nil)) then 
+    do return end;
+  end;
+  if (Reflect.field(self.willAppearSubscribers, id) == nil) then 
+    self.willAppearSubscribers[id] = _hx_tab_array({}, 0);
+  end;
+  Reflect.field(self.willAppearSubscribers, id):push(callback);
+end
+__streamDeckButton_StreamDeckButton.prototype.msgHandler = function(self,message) 
+  self.logger.d("Received message");
+  local params = __streamDeckButton__Messages_Messages_Fields_.parseMessage(message);
+  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/StreamDeckButton.hx",lineNumber=98,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
+  local tmp = params[1];
+  if (tmp) == 0 then 
+    self.logger.e("Error parsing message: %s", params[2]);
+    do return "" end;
+  elseif (tmp) == 1 then 
+    local _g = params[2];
+    local _g1 = _g.context;
+    local _g = _g.payload.settings;
+    if (self.contexts == nil) then 
+      self.logger.e("Contexts is null");
+      do return "" end;
+    end;
+    local value = self.contexts;
+    if (value ~= nil) then 
+      if (not value:exists(_g.id)) then 
+        self:setTitle(_g1, "Initializing");
+        self.logger.f("new id found: %s with this context: %s", _g.id, _g1);
+      end;
+      value:addContext(_g.id, _g1);
+    end; end;
+  do return "" end
+end
+__streamDeckButton_StreamDeckButton.prototype.setTitle = function(self,context,title) 
+  local _v_ = self.server;
+  if (_v_ ~= nil) then 
+    _v_:send(hs.json.encode(__streamDeckButton__Messages_Messages_Fields_.getTitleMessage(context, title)));
+  end;
+end
+__streamDeckButton_StreamDeckButton.prototype.setImage = function(self,id,imagePath) 
+  local _gthis = self;
+  local tmp;
+  if (id ~= nil) then 
+    local _v_ = self.contexts;
+    local value = (function() 
+      local _hx_1
+      if (_v_ == nil) then 
+      _hx_1 = nil; else 
+      _hx_1 = _v_:exists(id); end
+      return _hx_1
+    end )();
+    tmp = not ((function() 
+      local _hx_2
+      if (value == nil) then 
+      _hx_2 = false; else 
+      _hx_2 = value; end
+      return _hx_2
+    end )());
+  else
+    tmp = true;
+  end;
+  if (tmp) then 
+    self.logger.ef("setImage: id is null or contexts[id] is null", id);
+    do return end;
+  end;
+  local value = self.contexts;
+  if (value ~= nil) then 
+    (function(ctx) 
+      local ctxs = ctx:get(id);
+      if (ctxs == nil) then 
+        _gthis.logger.ef("setImage for %s leads to no context", id);
+        do return end;
+      end;
+      local context = ctxs:iterator();
+      while (context:hasNext()) do 
+        local message = __streamDeckButton__Messages_Messages_Fields_.getImageMessage(context:next(), imagePath);
+        if (message == nil) then 
+          _gthis.logger.ef("Error generating image message for %s", imagePath);
+          do return end;
+        end;
+        local _v_ = _gthis.server;
+        if (_v_ ~= nil) then 
+          _v_:send(hs.json.encode(message));
+        end;
+      end;
+    end)(value);
+  end;
+end
+__streamDeckButton_StreamDeckButton.prototype.start = function(self,port) 
+  self.contexts = __streamDeckButton_State.getInstance();
+  self.server = hs.httpserver.new(false, true);
+  local value = self.server;
+  if (value ~= nil) then 
+    value:setPort(port);
+    value:setName(self.name);
+    value:setCallback(function() 
+      do return "" end;
+    end);
+    value:websocket("/ws", _hx_bind(self,self.msgHandler));
+    value:start();
+    self.logger.f("Server started %s", value);
+  end;
+end
+
+__streamDeckButton_StreamDeckButton.prototype.__class__ =  __streamDeckButton_StreamDeckButton
 if _hx_bit_raw then
     _hx_bit_clamp = function(v)
     if v <= 2147483647 and v >= -2147483648 then
