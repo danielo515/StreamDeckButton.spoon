@@ -64,23 +64,25 @@ class StreamDeckButton {
 
         final response = switch (event) {
           case "keyDown":
+            var result:Null< Dynamic > = null;
             if (keyDownSubscribers.exists(ctx)) {
               for (callback in keyDownSubscribers[ctx]) {
-                callback(ctx, params);
+                result = callback(ctx, params);
               }
             }
-            Messages.showOkMessage(ctx);
+            result;
           case "willAppear":
+            var result:Null< Dynamic > = null;
             if (willAppearSubscribers.exists(ctx)) {
               for (callback in willAppearSubscribers[ctx]) {
                 callback(ctx, params);
               }
             }
-            Messages.showOkMessage(ctx);
+            result;
           default:
             Messages.showOkMessage(ctx);
         };
-        return Json.encode(response);
+        return Json.encode(response.or(Messages.showOkMessage(ctx)));
     }
     return "";
   }
@@ -124,7 +126,7 @@ class StreamDeckButton {
     contexts = State.getInstance();
     server = HttpServer.make(false, true);
     server.apply(server -> {
-      server.setPort(port);
+      server.setPort(port.or(3094));
       server.setName(name);
       server.setCallback(() -> "");
       server.websocket('/ws', msgHandler);

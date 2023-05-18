@@ -1056,6 +1056,7 @@ obj.prototype.msgHandler = function(self,message)
     end;
     local response;
     if (_g2) == "keyDown" then 
+      local result = nil;
       local o = self.keyDownSubscribers;
       if ((function() 
         local _hx_1
@@ -1070,11 +1071,12 @@ obj.prototype.msgHandler = function(self,message)
         while (_g < _g2.length) do 
           local callback = _g2[_g];
           _g = _g + 1;
-          callback(_g1, params);
+          result = callback(_g1, params);
         end;
       end;
-      response = __streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1);
+      response = result;
     elseif (_g2) == "willAppear" then 
+      local result = nil;
       local o = self.willAppearSubscribers;
       if ((function() 
         local _hx_2
@@ -1092,9 +1094,15 @@ obj.prototype.msgHandler = function(self,message)
           callback(_g1, params);
         end;
       end;
-      response = __streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1);else
+      response = result;else
     response = __streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1); end;
-    do return hs.json.encode(response) end; end;
+    do return hs.json.encode((function() 
+      local _hx_3
+      if (response == nil) then 
+      _hx_3 = __streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1); else 
+      _hx_3 = response; end
+      return _hx_3
+    end )()) end; end;
 end
 obj.prototype.setTitle = function(self,context,title) 
   local _v_ = self.server;
@@ -1156,7 +1164,13 @@ obj.prototype.start = function(self,port)
   self.server = hs.httpserver.new(false, true);
   local value = self.server;
   if (value ~= nil) then 
-    value:setPort(port);
+    value:setPort((function() 
+      local _hx_1
+      if (port == nil) then 
+      _hx_1 = 3094; else 
+      _hx_1 = port; end
+      return _hx_1
+    end )());
     value:setName(self.name);
     value:setCallback(function() 
       do return "" end;
