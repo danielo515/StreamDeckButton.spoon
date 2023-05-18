@@ -233,7 +233,7 @@ __streamDeckButton_Utils = _hx_e()
 __streamDeckButton__Messages_Messages_Fields_ = _hx_e()
 __streamDeckButton_State = _hx_e()
 __streamDeckButton__StreamDeckButton_StoredSettings_Impl_ = _hx_e()
-__streamDeckButton_StreamDeckButton = _hx_e()
+local obj = _hx_e()
 
 local _hx_bind, _hx_bit, _hx_staticToInstance, _hx_funcToField, _hx_maxn, _hx_print, _hx_apply_self, _hx_box_mr, _hx_bit_clamp, _hx_table, _hx_bit_raw
 local _hx_pcall_default = {};
@@ -2495,12 +2495,12 @@ __streamDeckButton__StreamDeckButton_StoredSettings_Impl_.get = function(this1,k
   end;
 end
 
-__streamDeckButton_StreamDeckButton.new = function() 
-  local self = _hx_new(__streamDeckButton_StreamDeckButton.prototype)
-  __streamDeckButton_StreamDeckButton.super(self)
+obj.new = function() 
+  local self = _hx_new(obj.prototype)
+  obj.super(self)
   return self
 end
-__streamDeckButton_StreamDeckButton.super = function(self) 
+obj.super = function(self) 
   self.willAppearSubscribers = _hx_e();
   self.keyDownSubscribers = _hx_e();
   self.contexts = nil;
@@ -2512,12 +2512,12 @@ __streamDeckButton_StreamDeckButton.super = function(self)
   self.settingsPath = "streamDeckButton";
   self.name = "StreamDeckButton";
 end
-_hx_exports["StreamDeckButton"] = __streamDeckButton_StreamDeckButton
-__streamDeckButton_StreamDeckButton.__name__ = true
-__streamDeckButton_StreamDeckButton.init = function() 
+_hx_exports["StreamDeckButton"] = obj
+obj.__name__ = true
+obj.init = function() 
 end
-__streamDeckButton_StreamDeckButton.prototype = _hx_e();
-__streamDeckButton_StreamDeckButton.prototype.getSettings = function(self) 
+obj.prototype = _hx_e();
+obj.prototype.getSettings = function(self) 
   local readSettings = hs.settings.get(self.name);
   do return (function() 
     local _hx_1
@@ -2527,7 +2527,7 @@ __streamDeckButton_StreamDeckButton.prototype.getSettings = function(self)
     return _hx_1
   end )() end
 end
-__streamDeckButton_StreamDeckButton.prototype.storeInSettings = function(self,id,context) 
+obj.prototype.storeInSettings = function(self,id,context) 
   local settings = self:getSettings();
   local value = Reflect.field(settings, id);
   local this1;
@@ -2548,7 +2548,7 @@ __streamDeckButton_StreamDeckButton.prototype.storeInSettings = function(self,id
   hs.settings.set(self.name, settings);
   self.logger.df("Settings: %s", Std.string(settings));
 end
-__streamDeckButton_StreamDeckButton.prototype.onKeyDown = function(self,id,callback) 
+obj.prototype.onKeyDown = function(self,id,callback) 
   if ((id == nil) or (callback == nil)) then 
     do return end;
   end;
@@ -2557,7 +2557,7 @@ __streamDeckButton_StreamDeckButton.prototype.onKeyDown = function(self,id,callb
   end;
   Reflect.field(self.keyDownSubscribers, id):push(callback);
 end
-__streamDeckButton_StreamDeckButton.prototype.onWillAppear = function(self,id,callback) 
+obj.prototype.onWillAppear = function(self,id,callback) 
   if ((id == nil) or (callback == nil)) then 
     do return end;
   end;
@@ -2566,7 +2566,7 @@ __streamDeckButton_StreamDeckButton.prototype.onWillAppear = function(self,id,ca
   end;
   Reflect.field(self.willAppearSubscribers, id):push(callback);
 end
-__streamDeckButton_StreamDeckButton.prototype.msgHandler = function(self,message) 
+obj.prototype.msgHandler = function(self,message) 
   self.logger.d("Received message");
   local params = __streamDeckButton__Messages_Messages_Fields_.parseMessage(message);
   __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/StreamDeckButton.hx",lineNumber=98,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
@@ -2592,13 +2592,13 @@ __streamDeckButton_StreamDeckButton.prototype.msgHandler = function(self,message
     end; end;
   do return "" end
 end
-__streamDeckButton_StreamDeckButton.prototype.setTitle = function(self,context,title) 
+obj.prototype.setTitle = function(self,context,title) 
   local _v_ = self.server;
   if (_v_ ~= nil) then 
     _v_:send(hs.json.encode(__streamDeckButton__Messages_Messages_Fields_.getTitleMessage(context, title)));
   end;
 end
-__streamDeckButton_StreamDeckButton.prototype.setImage = function(self,id,imagePath) 
+obj.prototype.setImage = function(self,id,imagePath) 
   local _gthis = self;
   local tmp;
   if (id ~= nil) then 
@@ -2647,7 +2647,7 @@ __streamDeckButton_StreamDeckButton.prototype.setImage = function(self,id,imageP
     end)(value);
   end;
 end
-__streamDeckButton_StreamDeckButton.prototype.start = function(self,port) 
+obj.prototype.start = function(self,port) 
   self.contexts = __streamDeckButton_State.getInstance();
   self.server = hs.httpserver.new(false, true);
   local value = self.server;
@@ -2663,7 +2663,7 @@ __streamDeckButton_StreamDeckButton.prototype.start = function(self,port)
   end;
 end
 
-__streamDeckButton_StreamDeckButton.prototype.__class__ =  __streamDeckButton_StreamDeckButton
+obj.prototype.__class__ =  obj
 if _hx_bit_raw then
     _hx_bit_clamp = function(v)
     if v <= 2147483647 and v >= -2147483648 then

@@ -42,7 +42,7 @@ abstract StoredSettings(StringTable< Dict >) from StringTable< Dict > to StringT
   }
 }
 
-@:expose("StreamDeckButton")
+@:expose("StreamDeckButton") @:native("obj")
 class StreamDeckButton {
   public final name:String = "StreamDeckButton";
   public final settingsPath:String = "streamDeckButton";
