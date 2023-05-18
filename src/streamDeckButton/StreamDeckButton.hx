@@ -1,51 +1,13 @@
 package streamDeckButton;
 
 import hammerspoon.Hammerspoon.HttpServer;
-import lua.Table;
-import lua.Table.create as t;
-import hammerspoon.Settings;
 import hammerspoon.Json;
 import hammerspoon.Logger;
 import haxe.DynamicAccess;
 
-typedef StringTable< T > = Table< String, T >;
-
-abstract Dict(StringTable< String >) from StringTable< String > to StringTable< String > {
-  inline public function new(args) {
-    this = args;
-  }
-
-  @:arrayAccess
-  inline public function set(key:String, value:String):Void {
-    Reflect.setField(this, key, value);
-  }
-}
-
-abstract StoredSettings(StringTable< Dict >) from StringTable< Dict > to StringTable< Dict > {
-  inline public function new(args) {
-    this = args;
-  }
-
-  @:arrayAccess
-  inline public function get(key:String):Dict {
-    final value = Reflect.field(this, key);
-    if (value == null) {
-      Reflect.setField(this, key, new Dict(t()));
-      return get(key);
-    }
-    return value;
-  }
-
-  @:arrayAccess
-  inline public function set(key:String, value:Dict):Void {
-    Reflect.setField(this, key, value);
-  }
-}
-
 @:expose("StreamDeckButton") @:native("obj")
 class StreamDeckButton {
   public final name:String = "StreamDeckButton";
-  public final settingsPath:String = "streamDeckButton";
   public final version:String = "3.0.0";
   public final author:String = "Danielo Rodríguez <rdanielo@gmail.com>";
   public final license:String = "MIT - https://opensource.org/licenses/MIT";
@@ -56,19 +18,6 @@ class StreamDeckButton {
 
   public var keyDownSubscribers:DynamicAccess< Array< Dynamic > > = new DynamicAccess< Array< Dynamic > >();
   public var willAppearSubscribers:DynamicAccess< Array< Dynamic > > = new DynamicAccess< Array< Dynamic > >();
-
-  public function getSettings():StoredSettings {
-    final readSettings = Settings.get(name);
-    final settings = readSettings != null ? readSettings : Table.create();
-    return settings;
-  }
-
-  public function storeInSettings(id:String, context:String):Void {
-    final settings = getSettings();
-    settings[id][context] = context;
-    Settings.set(name, settings);
-    logger.df("Settings: %s", Std.string(settings));
-  }
 
   static public function init():Void {}
 

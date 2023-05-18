@@ -1,22 +1,20 @@
 package streamDeckButton;
 
+import lua.Lua;
+import streamDeckButton.Data.StoredSettings;
 import hammerspoon.Json;
-import lua.StringMap;
+import lua.Table.create as t;
 import hammerspoon.Settings;
 import json2object.JsonWriter;
 import json2object.JsonParser;
 
-typedef Data = StringMap< StringMap< String > >;
-
 class State {
   private static var inst:Null< State > = null;
   private static final namespace = 'StreamDeckButton-hx';
-  private static final jsonWritter = new JsonWriter< Data >();
-  private static final jsonReader = new JsonParser< Data >();
 
-  public final data:Data;
+  public final data:StoredSettings;
 
-  function new(data:Data) {
+  function new(data:StoredSettings) {
     this.data = data;
   }
 
@@ -33,17 +31,18 @@ class State {
     }
     final rawData = Settings.get(namespace);
     final parsedData = if (rawData == null) {
-      new StringMap< StringMap< String > >();
+      new StoredSettings(t({}));
     } else {
-      jsonReader.fromJson(rawData, 'settings');
+      new StoredSettings(rawData);
     };
     inst = new State(parsedData);
     return inst;
   }
 
   public function store() {
-    Settings.set(namespace, jsonWritter.write(data));
-    trace('Saved it');
+    final jsonData = data.toJson();
+    Settings.set(namespace, jsonData);
+    trace('Saved it:', jsonData);
   }
 
   public function get(id:String) {
@@ -56,14 +55,7 @@ class State {
 
   public function addContext(id:String, context:String) {
     final check = data.get(id);
-    final existingContexts = if (check == null) {
-      final newContext = new StringMap< String >();
-      data.set(id, newContext);
-      newContext;
-    } else {
-      check;
-    };
-    existingContexts.set('context', context);
+    check[context] = context;
     store();
   }
 }
