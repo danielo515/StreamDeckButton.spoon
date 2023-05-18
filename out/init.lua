@@ -910,6 +910,9 @@ end
 __streamDeckButton__Messages_Messages_Fields_.getTitleMessage = function(context,title) 
   do return ({event = "setTitle", context = context, payload = ({title = title, target = 0})}) end;
 end
+__streamDeckButton__Messages_Messages_Fields_.showOkMessage = function(context) 
+  do return ({event = "showOk", context = context}) end;
+end
 __streamDeckButton__Messages_Messages_Fields_.getImageMessage = function(context,imagePath) 
   local imageBase64 = __streamDeckButton_Utils.loadImageAsBase64(imagePath);
   if (imageBase64 ~= nil) then 
@@ -952,7 +955,7 @@ __streamDeckButton_State.prototype = _hx_e();
 __streamDeckButton_State.prototype.store = function(self) 
   local jsonData = hs.json.encode(self.data);
   hs.settings.set(__streamDeckButton_State.namespace, jsonData);
-  __haxe_Log.trace("Saved it:", _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true,customParams=true},fileName="src/streamDeckButton/State.hx",lineNumber=45,className="streamDeckButton.State",methodName="store",customParams=_hx_tab_array({[0]=jsonData}, 1)}));
+  __haxe_Log.trace("Saved it:", _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true,customParams=true},fileName="src/streamDeckButton/State.hx",lineNumber=41,className="streamDeckButton.State",methodName="store",customParams=_hx_tab_array({[0]=jsonData}, 1)}));
 end
 __streamDeckButton_State.prototype.get = function(self,id) 
   local this1 = self.data;
@@ -1030,6 +1033,7 @@ obj.prototype.msgHandler = function(self,message)
   elseif (tmp) == 1 then 
     local _g = params[2];
     local _g1 = _g.context;
+    local _g2 = _g.event;
     local _g = _g.payload.settings;
     if (self.contexts == nil) then 
       self.logger.e("Contexts is null");
@@ -1042,8 +1046,48 @@ obj.prototype.msgHandler = function(self,message)
         self.logger.f("new id found: %s with this context: %s", _g.id, _g1);
       end;
       value:addContext(_g.id, _g1);
-    end; end;
-  do return "" end
+    end;
+    local response;
+    if (_g2) == "keyDown" then 
+      local o = self.keyDownSubscribers;
+      if ((function() 
+        local _hx_1
+        if ((_G.type(o) == "string") and ((String.prototype[_g1] ~= nil) or (_g1 == "length"))) then 
+        _hx_1 = true; elseif (o.__fields__ ~= nil) then 
+        _hx_1 = o.__fields__[_g1] ~= nil; else 
+        _hx_1 = o[_g1] ~= nil; end
+        return _hx_1
+      end )()) then 
+        local _g = 0;
+        local _g2 = Reflect.field(self.keyDownSubscribers, _g1);
+        while (_g < _g2.length) do 
+          local callback = _g2[_g];
+          _g = _g + 1;
+          callback(_g1, params);
+        end;
+      end;
+      response = __streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1);
+    elseif (_g2) == "willAppear" then 
+      local o = self.willAppearSubscribers;
+      if ((function() 
+        local _hx_2
+        if ((_G.type(o) == "string") and ((String.prototype[_g1] ~= nil) or (_g1 == "length"))) then 
+        _hx_2 = true; elseif (o.__fields__ ~= nil) then 
+        _hx_2 = o.__fields__[_g1] ~= nil; else 
+        _hx_2 = o[_g1] ~= nil; end
+        return _hx_2
+      end )()) then 
+        local _g = 0;
+        local _g2 = Reflect.field(self.willAppearSubscribers, _g1);
+        while (_g < _g2.length) do 
+          local callback = _g2[_g];
+          _g = _g + 1;
+          callback(_g1, params);
+        end;
+      end;
+      response = __streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1);else
+    response = __streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1); end;
+    do return hs.json.encode(response) end; end;
 end
 obj.prototype.setTitle = function(self,context,title) 
   local _v_ = self.server;

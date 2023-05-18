@@ -49,7 +49,7 @@ class StreamDeckButton {
       case Left(error):
         logger.e("Error parsing message: %s", error);
         return "";
-      case Right({payload: {settings: s}, context: ctx}):
+      case Right({payload: {settings: s}, context: ctx, event: event}):
         if (contexts == null) {
           logger.e("Contexts is null");
           return "";
@@ -61,27 +61,27 @@ class StreamDeckButton {
           }
           contexts.addContext(s.id, ctx);
         });
+
+        final response = switch (event) {
+          case "keyDown":
+            if (keyDownSubscribers.exists(ctx)) {
+              for (callback in keyDownSubscribers[ctx]) {
+                callback(ctx, params);
+              }
+            }
+            Messages.showOkMessage(ctx);
+          case "willAppear":
+            if (willAppearSubscribers.exists(ctx)) {
+              for (callback in willAppearSubscribers[ctx]) {
+                callback(ctx, params);
+              }
+            }
+            Messages.showOkMessage(ctx);
+          default:
+            Messages.showOkMessage(ctx);
+        };
+        return Json.encode(response);
     }
-    // var response = {};
-    // if (event == "keyDown") {
-    //   if (keyDownSubscribers.exists(id)) {
-    //     for (callback in keyDownSubscribers[id]) {
-    //       response = callback(params.context, params);
-    //     }
-    //   }
-    // } else if (event == "willAppear") {
-    //   if (willAppearSubscribers.exists(id)) {
-    //     for (callback in willAppearSubscribers[id]) {
-    //       response = callback(params.context, params);
-    //     }
-    //   }
-    // }
-    //
-    // if (response == null) {
-    //   response = showOkMessage(contexts[id]);
-    // }
-    //
-    // return Json.encode(response);
     return "";
   }
 

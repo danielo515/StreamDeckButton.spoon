@@ -1,12 +1,8 @@
 package streamDeckButton;
 
-import lua.Lua;
 import streamDeckButton.Data.StoredSettings;
-import hammerspoon.Json;
 import lua.Table.create as t;
 import hammerspoon.Settings;
-import json2object.JsonWriter;
-import json2object.JsonParser;
 
 class State {
   private static var inst:Null< State > = null;
