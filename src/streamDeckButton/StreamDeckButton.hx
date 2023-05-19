@@ -20,9 +20,10 @@ class StreamDeckButton {
   public final logger = Logger.make("StreamDeckButton", "debug");
 
   // Convenience accessors for external modules
-  static final getImageMessage = Messages.getImageMessage;
-  static final showOkMessage = Messages.showOkMessage;
-  static final getTitleMessage = Messages.getTitleMessage;
+  // Don't make them static because external code gets an instance, not the class
+  public final getImageMessage = Messages.getImageMessage;
+  public final showOkMessage = Messages.showOkMessage;
+  public final getTitleMessage = Messages.getTitleMessage;
 
   // Runtime
   public var contexts:Null< State > = null;

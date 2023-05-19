@@ -1253,6 +1253,9 @@ obj.super = function(self)
   self.willAppearSubscribers = _hx_e();
   self.keyDownSubscribers = __haxe_ds_StringMap.new();
   self.contexts = nil;
+  self.getTitleMessage = _hx_funcToField(__streamDeckButton__Messages_Messages_Fields_.getTitleMessage);
+  self.showOkMessage = _hx_funcToField(__streamDeckButton__Messages_Messages_Fields_.showOkMessage);
+  self.getImageMessage = _hx_funcToField(__streamDeckButton__Messages_Messages_Fields_.getImageMessage);
   self.logger = hs.logger.new("StreamDeckButton", "debug");
   self.homepage = "https://github.com/danielo515/StreamDeckButton.spoon";
   self.license = "MIT - https://opensource.org/licenses/MIT";
@@ -1306,7 +1309,7 @@ end
 obj.prototype.msgHandler = function(self,message) 
   self.logger.d("Received message");
   local params = __streamDeckButton__Messages_Messages_Fields_.parseMessage(message);
-  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/StreamDeckButton.hx",lineNumber=66,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
+  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/StreamDeckButton.hx",lineNumber=67,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
   local tmp = params[1];
   if (tmp) == 0 then 
     self.logger.e("Error parsing message: %s", params[2]);
@@ -1492,12 +1495,6 @@ local _hx_static_init = function()
   
   __streamDeckButton_State.namespace = "StreamDeckButton-hx";
   
-  obj.getImageMessage = __streamDeckButton__Messages_Messages_Fields_.getImageMessage;
-  
-  obj.showOkMessage = __streamDeckButton__Messages_Messages_Fields_.showOkMessage;
-  
-  obj.getTitleMessage = __streamDeckButton__Messages_Messages_Fields_.getTitleMessage;
-  
   
 end
 
@@ -1514,6 +1511,16 @@ _hx_bind = function(o,m)
     o._hx__closures[m] = f;
   end
   return f;
+end
+
+_hx_funcToField = function(f)
+  if type(f) == 'function' then
+    return function(self,...)
+      return f(...)
+    end
+  else
+    return f
+  end
 end
 
 _hx_print = print or (function() end)
