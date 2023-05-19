@@ -22,9 +22,9 @@ class TableIterator< T > {
 
   static public function iterator< T >(obj):Iterator< T > {
     var it = keys(obj);
-    return untyped {
+    return {
       hasNext: function() return it.hasNext(),
-      next: function() return h[it.next()]
+      next: function() return obj[cast(it.next())]
     };
   }
 }

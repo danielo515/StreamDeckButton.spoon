@@ -1056,7 +1056,7 @@ __streamDeckButton_TableIterator.iterator = function(obj)
   do return _hx_o({__fields__={hasNext=true,next=true},hasNext=function(self) 
     do return it:hasNext() end;
   end,next=function(self) 
-    do return h[it:next()] end;
+    do return obj[it:next()] end;
   end}) end;
 end
 
