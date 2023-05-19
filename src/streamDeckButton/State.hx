@@ -1,5 +1,6 @@
 package streamDeckButton;
 
+import streamDeckButton.Messages.MessageID;
 import hammerspoon.Json;
 import streamDeckButton.Data.StoredSettings;
 import lua.Table.create as t;
@@ -44,18 +45,17 @@ class State {
   public function store() {
     final jsonData = data.toJson();
     Settings.set(namespace, jsonData);
-    trace('Saved it:', jsonData);
   }
 
-  public function get(id:String) {
+  public function get(id:MessageID) {
     return data.get(id);
   }
 
-  public function exists(id:String):Bool {
+  public function exists(id:MessageID):Bool {
     return data.exists(id);
   }
 
-  public function addContext(id:String, context:String) {
+  public function addContext(id:MessageID, context:String) {
     final check = data.get(id);
     check[context] = context;
     store();

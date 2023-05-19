@@ -1,37 +1,56 @@
 package streamDeckButton;
 
+import streamDeckButton.Messages.IncomingMessage;
+import streamDeckButton.Messages.MessageID;
 import hammerspoon.Hammerspoon.HttpServer;
 import hammerspoon.Json;
 import hammerspoon.Logger;
 import haxe.DynamicAccess;
 
+typedef Subscriber = String -> IncomingMessage -> Null< Dynamic >;
+
 @:expose("StreamDeckButton") @:native("obj")
 class StreamDeckButton {
+  // Metadata
   public final name:String = "StreamDeckButton";
   public final version:String = "3.0.0";
   public final author:String = "Danielo Rodríguez <rdanielo@gmail.com>";
   public final license:String = "MIT - https://opensource.org/licenses/MIT";
   public final homepage:String = "https://github.com/danielo515/StreamDeckButton.spoon";
   public final logger = Logger.make("StreamDeckButton", "debug");
+
+  // Convenience accessors for external modules
+  static final getImageMessage = Messages.getImageMessage;
+  static final showOkMessage = Messages.showOkMessage;
+  static final getTitleMessage = Messages.getTitleMessage;
+
+  // Runtime
   public var contexts:Null< State > = null;
   public var server:Null< HttpServer >;
 
-  public var keyDownSubscribers:DynamicAccess< Array< Dynamic > > = new DynamicAccess< Array< Dynamic > >();
-  public var willAppearSubscribers:DynamicAccess< Array< Dynamic > > = new DynamicAccess< Array< Dynamic > >();
+  public final keyDownSubscribers = new Map< MessageID, Array< Subscriber > >();
+  public final willAppearSubscribers = new DynamicAccess< Array< Subscriber > >();
 
   static public function init():Void {}
 
-  public function onKeyDown(id:String, callback:Dynamic -> Dynamic -> Void):Void {
+  public function onKeyDown(id:MessageID, callback:Null< Subscriber >):Void {
     if (id == null || callback == null) {
       return;
     }
-    if (keyDownSubscribers[id] == null) {
-      keyDownSubscribers[id] = [];
+    final subscribers = switch (keyDownSubscribers[id]) {
+      case null:
+        final value = [];
+        keyDownSubscribers[id] = value;
+        value;
+      case value if (value != null):
+        value;
+      case _:
+        throw "This should never happen";
     }
-    keyDownSubscribers[id].push(callback);
+    subscribers.push(callback);
   }
 
-  public function onWillAppear(id:String, callback:Dynamic -> Dynamic -> Void):Void {
+  public function onWillAppear(id:String, callback:Null< Subscriber >):Void {
     if (id == null || callback == null) {
       return;
     }
@@ -49,7 +68,7 @@ class StreamDeckButton {
       case Left(error):
         logger.e("Error parsing message: %s", error);
         return "";
-      case Right({payload: {settings: s}, context: ctx, event: event}):
+      case Right(parsedMessage = {payload: {settings: s}, context: ctx, event: event}):
         if (contexts == null) {
           logger.e("Contexts is null");
           return "";
@@ -65,9 +84,11 @@ class StreamDeckButton {
         final response = switch (event) {
           case "keyDown":
             var result:Null< Dynamic > = null;
-            if (keyDownSubscribers.exists(ctx)) {
-              for (callback in keyDownSubscribers[ctx]) {
-                result = callback(ctx, params);
+            final subscribers = keyDownSubscribers[s.id];
+            if (subscribers != null) {
+              for (callback in subscribers) {
+                result = callback(ctx, parsedMessage);
+                logger.f("callback result %s", cast(result));
               }
             }
             result;
@@ -75,13 +96,16 @@ class StreamDeckButton {
             var result:Null< Dynamic > = null;
             if (willAppearSubscribers.exists(ctx)) {
               for (callback in willAppearSubscribers[ctx]) {
-                callback(ctx, params);
+                result = callback(ctx, parsedMessage);
+                logger.f("callback result %s", cast(result));
               }
             }
             result;
-          default:
+          case _:
+            logger.f("Default case", (parsedMessage));
             Messages.showOkMessage(ctx);
         };
+        logger.f("Sending response: %s", cast(response));
         return Json.encode(response.or(Messages.showOkMessage(ctx)));
     }
     return "";
@@ -100,7 +124,7 @@ class StreamDeckButton {
     * id - The identifier for the button
     * imagePath - The path to the image to set
   **/
-  public function setImage(id:String, imagePath:String) {
+  public function setImage(id:MessageID, imagePath:String) {
     if (id == null || !contexts!.exists(id).or(false)) {
       logger.ef("setImage: id is null or contexts[id] is null", id);
       return;

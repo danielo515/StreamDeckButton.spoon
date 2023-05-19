@@ -23,6 +23,8 @@ class Utils {
   }
 }
 
+abstract MessageID(String) {}
+
 /**
   {
   action = "org.tynsoe.streamdeck.wsproxy.proxy",
@@ -52,7 +54,7 @@ typedef IncomingMessage = {
     };
     final isInMultiAction:Bool;
     final settings:{
-      final id:String;
+      final id:MessageID;
       final remoteServer:String;
     };
   };

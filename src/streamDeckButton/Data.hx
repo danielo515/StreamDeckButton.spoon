@@ -1,5 +1,6 @@
 package streamDeckButton;
 
+import streamDeckButton.Messages.MessageID;
 import hammerspoon.Json;
 import lua.Table;
 import lua.Lua;
@@ -58,25 +59,25 @@ abstract StoredSettings(StringTable< Dict >) from StringTable< Dict > to StringT
     If the namesppace does not exist, it will be created.
    */
   @:arrayAccess
-  inline public function get(key:String):Dict {
-    final value = Reflect.field(this, key);
+  inline public function get(key:MessageID):Dict {
+    final value = Reflect.field(this, cast key);
     if (value == null) {
-      Reflect.setField(this, key, new Dict(t()));
+      Reflect.setField(this, cast key, new Dict(t()));
       return get(key);
     }
     return value;
   }
 
   @:arrayAccess
-  inline public function set(key:String, value:Dict):Void {
-    Reflect.setField(this, key, value);
+  inline public function set(key:MessageID, value:Dict):Void {
+    Reflect.setField(this, cast key, value);
   }
 
   inline public function toJson():String {
     return Json.encode(this);
   }
 
-  inline public function exists(id:String):Bool {
-    return Reflect.field(this, id) != null;
+  inline public function exists(id:MessageID):Bool {
+    return Reflect.field(this, cast id) != null;
   }
 }

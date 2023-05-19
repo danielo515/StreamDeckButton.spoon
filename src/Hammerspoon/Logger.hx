@@ -67,7 +67,7 @@ extern class Logger {
    * Returns:
    *  * None
    */
-  @:luaDotMethod public function ef(fmt:String, ...params:String):Void;
+  @:luaDotMethod public function ef(fmt:String, ...params:Dynamic):Void;
 
   /**
    * Logs formatted info to the console
