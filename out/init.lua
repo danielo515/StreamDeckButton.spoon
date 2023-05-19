@@ -1250,7 +1250,7 @@ obj.new = function()
   return self
 end
 obj.super = function(self) 
-  self.willAppearSubscribers = _hx_e();
+  self.willAppearSubscribers = __haxe_ds_StringMap.new();
   self.keyDownSubscribers = __haxe_ds_StringMap.new();
   self.contexts = nil;
   self.getTitleMessage = _hx_funcToField(__streamDeckButton__Messages_Messages_Fields_.getTitleMessage);
@@ -1301,15 +1301,35 @@ obj.prototype.onWillAppear = function(self,id,callback)
   if ((id == nil) or (callback == nil)) then 
     do return end;
   end;
-  if (Reflect.field(self.willAppearSubscribers, id) == nil) then 
-    self.willAppearSubscribers[id] = _hx_tab_array({}, 0);
+  local subscribers;
+  local ret = self.willAppearSubscribers.h[id];
+  if (ret == __haxe_ds_StringMap.tnull) then 
+    ret = nil;
   end;
-  Reflect.field(self.willAppearSubscribers, id):push(callback);
+  local _g = ret;
+  if (_g == nil) then 
+    local value = _hx_tab_array({}, 0);
+    local _this = self.keyDownSubscribers;
+    local key = id;
+    if (value == nil) then 
+      _this.h[key] = __haxe_ds_StringMap.tnull;
+    else
+      _this.h[key] = value;
+    end;
+    subscribers = value;
+  else
+    if (_g ~= nil) then 
+      subscribers = _g;
+    else
+      _G.error(__haxe_Exception.thrown("This should never happen"),0);
+    end;
+  end;
+  subscribers:push(callback);
 end
 obj.prototype.msgHandler = function(self,message) 
   self.logger.d("Received message");
   local params = __streamDeckButton__Messages_Messages_Fields_.parseMessage(message);
-  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/StreamDeckButton.hx",lineNumber=67,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
+  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/StreamDeckButton.hx",lineNumber=74,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
   local tmp = params[1];
   if (tmp) == 0 then 
     self.logger.e("Error parsing message: %s", params[2]);
@@ -1331,55 +1351,46 @@ obj.prototype.msgHandler = function(self,message)
       end;
       value:addContext(_g3.id, _g1);
     end;
-    local response;
+    local subscribers;
     if (_g2) == "keyDown" then 
-      local result = nil;
       local ret = self.keyDownSubscribers.h[_g3.id];
       if (ret == __haxe_ds_StringMap.tnull) then 
         ret = nil;
       end;
-      local subscribers = ret;
-      if (subscribers ~= nil) then 
-        local _g2 = 0;
-        while (_g2 < subscribers.length) do 
-          local callback = subscribers[_g2];
-          _g2 = _g2 + 1;
-          result = callback(_g1, _g);
-          self.logger.f("callback result %s", result);
-        end;
+      local subscribers1 = ret;
+      if (subscribers1 ~= nil) then 
+        subscribers = subscribers1;
+      else
+        self.logger.f("No subscribers for keyDown event");
+        subscribers = _hx_tab_array({}, 0);
       end;
-      response = result;
     elseif (_g2) == "willAppear" then 
-      local result = nil;
-      local o = self.willAppearSubscribers;
-      if ((function() 
-        local _hx_1
-        if ((_G.type(o) == "string") and ((String.prototype[_g1] ~= nil) or (_g1 == "length"))) then 
-        _hx_1 = true; elseif (o.__fields__ ~= nil) then 
-        _hx_1 = o.__fields__[_g1] ~= nil; else 
-        _hx_1 = o[_g1] ~= nil; end
-        return _hx_1
-      end )()) then 
-        local _g2 = 0;
-        local _g3 = Reflect.field(self.willAppearSubscribers, _g1);
-        while (_g2 < _g3.length) do 
-          local callback = _g3[_g2];
-          _g2 = _g2 + 1;
-          result = callback(_g1, _g);
-          self.logger.f("callback result %s", result);
-        end;
+      local ret = self.willAppearSubscribers.h[_g3.id];
+      if (ret == __haxe_ds_StringMap.tnull) then 
+        ret = nil;
       end;
-      response = result;else
-    self.logger.f("Default case", _g);
-    response = __streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1); end;
+      local subscribers1 = ret;
+      if (subscribers1 ~= nil) then 
+        subscribers = subscribers1;
+      else
+        self.logger.f("No subscribers for appear event");
+        subscribers = _hx_tab_array({}, 0);
+      end;else
+    subscribers = _hx_tab_array({}, 0); end;
+    local response = nil;
+    local _g2 = 0;
+    while (_g2 < subscribers.length) do 
+      local callback = subscribers[_g2];
+      _g2 = _g2 + 1;
+      response = callback(_g1, _g);
+      self.logger.f("callback result %s", response);
+    end;
     self.logger.f("Sending response: %s", response);
-    do return hs.json.encode((function() 
-      local _hx_2
-      if (response == nil) then 
-      _hx_2 = __streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1); else 
-      _hx_2 = response; end
-      return _hx_2
-    end )()) end; end;
+    if (response ~= nil) then 
+      do return hs.json.encode(response) end;
+    else
+      do return hs.json.encode(__streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1)) end;
+    end; end;
 end
 obj.prototype.setTitle = function(self,context,title) 
   local _v_ = self.server;

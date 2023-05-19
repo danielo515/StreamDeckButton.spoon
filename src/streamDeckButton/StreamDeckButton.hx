@@ -30,7 +30,7 @@ class StreamDeckButton {
   public var server:Null< HttpServer >;
 
   public final keyDownSubscribers = new Map< MessageID, Array< Subscriber > >();
-  public final willAppearSubscribers = new DynamicAccess< Array< Subscriber > >();
+  public final willAppearSubscribers = new Map< MessageID, Array< Subscriber > >();
 
   static public function init():Void {}
 
@@ -51,14 +51,21 @@ class StreamDeckButton {
     subscribers.push(callback);
   }
 
-  public function onWillAppear(id:String, callback:Null< Subscriber >):Void {
+  public function onWillAppear(id:MessageID, callback:Null< Subscriber >):Void {
     if (id == null || callback == null) {
       return;
     }
-    if (willAppearSubscribers[id] == null) {
-      willAppearSubscribers[id] = [];
+    final subscribers = switch (willAppearSubscribers[id]) {
+      case null:
+        final value = [];
+        keyDownSubscribers[id] = value;
+        value;
+      case value if (value != null):
+        value;
+      case _:
+        throw "This should never happen";
     }
-    willAppearSubscribers[id].push(callback);
+    subscribers.push(callback);
   }
 
   public function msgHandler(message:String):String {
@@ -82,32 +89,35 @@ class StreamDeckButton {
           contexts.addContext(s.id, ctx);
         });
 
-        final response = switch (event) {
+        final subscribers:Array< Subscriber > = switch (event) {
           case "keyDown":
-            var result:Null< Dynamic > = null;
             final subscribers = keyDownSubscribers[s.id];
             if (subscribers != null) {
-              for (callback in subscribers) {
-                result = callback(ctx, parsedMessage);
-                logger.f("callback result %s", cast(result));
-              }
+              subscribers;
+            } else {
+              logger.f("No subscribers for keyDown event");
+              [];
             }
-            result;
           case "willAppear":
-            var result:Null< Dynamic > = null;
-            if (willAppearSubscribers.exists(ctx)) {
-              for (callback in willAppearSubscribers[ctx]) {
-                result = callback(ctx, parsedMessage);
-                logger.f("callback result %s", cast(result));
-              }
+            final subscribers = willAppearSubscribers[s.id];
+            if (subscribers != null) {
+              subscribers;
+            } else {
+              logger.f("No subscribers for appear event");
+              [];
             }
-            result;
-          case _:
-            logger.f("Default case", (parsedMessage));
-            Messages.showOkMessage(ctx);
+          case _: [];
         };
+        var response:Null< Dynamic > = null;
+
+        for (callback in subscribers) {
+          response = callback(ctx, parsedMessage);
+          logger.f("callback result %s", cast(response));
+        }
         logger.f("Sending response: %s", cast(response));
-        return Json.encode(response.or(Messages.showOkMessage(ctx)));
+        return if (response != null) {
+          Json.encode(response);
+        } else Json.encode(Messages.showOkMessage(ctx));
     }
     return "";
   }
