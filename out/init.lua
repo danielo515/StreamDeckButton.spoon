@@ -216,7 +216,7 @@ __streamDeckButton_TableIterator = _hx_e()
 __streamDeckButton__Data_Dict_Impl_ = _hx_e()
 __streamDeckButton__Data_StoredSettings_Impl_ = _hx_e()
 __streamDeckButton_Utils = _hx_e()
-__streamDeckButton__Messages_Messages_Fields_ = _hx_e()
+local messages = _hx_e()
 __streamDeckButton_State = _hx_e()
 local obj = _hx_e()
 
@@ -1120,9 +1120,9 @@ __streamDeckButton_Utils.loadImageAsBase64 = function(imagePath)
   do return nil end;
 end
 
-__streamDeckButton__Messages_Messages_Fields_.new = {}
-__streamDeckButton__Messages_Messages_Fields_.__name__ = true
-__streamDeckButton__Messages_Messages_Fields_.parseMessage = function(message) 
+messages.new = {}
+messages.__name__ = true
+messages.parseMessage = function(message) 
   local parsed = hs.json.decode(message);
   if (parsed == nil) then 
     do return __haxe_ds_Either.Left(Std.string("Invalid JSON: ") .. Std.string(message)) end;
@@ -1159,13 +1159,13 @@ __streamDeckButton__Messages_Messages_Fields_.parseMessage = function(message)
   end;
   do return __haxe_ds_Either.Right(_hx_o({__fields__={event=true,context=true,payload=true},event=parsed.event,context=parsed.context,payload=_hx_o({__fields__={coordinates=true,isInMultiAction=true,settings=true},coordinates=_hx_o({__fields__={column=true,row=true},column=parsed.payload.coordinates.column,row=parsed.payload.coordinates.row}),isInMultiAction=parsed.payload.isInMultiAction,settings=_hx_o({__fields__={id=true,remoteServer=true},id=parsed.payload.settings.id,remoteServer=parsed.payload.settings.remoteServer})})})) end;
 end
-__streamDeckButton__Messages_Messages_Fields_.getTitleMessage = function(context,title) 
+messages.getTitleMessage = function(context,title) 
   do return ({event = "setTitle", context = context, payload = ({title = title, target = 0})}) end;
 end
-__streamDeckButton__Messages_Messages_Fields_.showOkMessage = function(context) 
+messages.showOkMessage = function(context) 
   do return ({event = "showOk", context = context}) end;
 end
-__streamDeckButton__Messages_Messages_Fields_.getImageMessage = function(context,imagePath) 
+messages.getImageMessage = function(context,imagePath) 
   local imageBase64 = __streamDeckButton_Utils.loadImageAsBase64(imagePath);
   if (imageBase64 ~= nil) then 
     do return ({event = "setImage", context = context, payload = ({image = imageBase64, target = 0, state = 0})}) end;
@@ -1253,9 +1253,9 @@ obj.super = function(self)
   self.willAppearSubscribers = __haxe_ds_StringMap.new();
   self.keyDownSubscribers = __haxe_ds_StringMap.new();
   self.contexts = nil;
-  self.getTitleMessage = _hx_funcToField(__streamDeckButton__Messages_Messages_Fields_.getTitleMessage);
-  self.showOkMessage = _hx_funcToField(__streamDeckButton__Messages_Messages_Fields_.showOkMessage);
-  self.getImageMessage = _hx_funcToField(__streamDeckButton__Messages_Messages_Fields_.getImageMessage);
+  self.getTitleMessage = _hx_funcToField(messages.getTitleMessage);
+  self.showOkMessage = _hx_funcToField(messages.showOkMessage);
+  self.getImageMessage = _hx_funcToField(messages.getImageMessage);
   self.logger = hs.logger.new("StreamDeckButton", "debug");
   self.homepage = "https://github.com/danielo515/StreamDeckButton.spoon";
   self.license = "MIT - https://opensource.org/licenses/MIT";
@@ -1309,7 +1309,7 @@ obj.prototype.onWillAppear = function(self,id,callback)
   local _g = ret;
   if (_g == nil) then 
     local value = _hx_tab_array({}, 0);
-    local _this = self.keyDownSubscribers;
+    local _this = self.willAppearSubscribers;
     local key = id;
     if (value == nil) then 
       _this.h[key] = __haxe_ds_StringMap.tnull;
@@ -1328,7 +1328,7 @@ obj.prototype.onWillAppear = function(self,id,callback)
 end
 obj.prototype.msgHandler = function(self,message) 
   self.logger.d("Received message");
-  local params = __streamDeckButton__Messages_Messages_Fields_.parseMessage(message);
+  local params = messages.parseMessage(message);
   __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/StreamDeckButton.hx",lineNumber=74,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
   local tmp = params[1];
   if (tmp) == 0 then 
@@ -1389,13 +1389,13 @@ obj.prototype.msgHandler = function(self,message)
     if (response ~= nil) then 
       do return hs.json.encode(response) end;
     else
-      do return hs.json.encode(__streamDeckButton__Messages_Messages_Fields_.showOkMessage(_g1)) end;
+      do return hs.json.encode(messages.showOkMessage(_g1)) end;
     end; end;
 end
 obj.prototype.setTitle = function(self,context,title) 
   local _v_ = self.server;
   if (_v_ ~= nil) then 
-    _v_:send(hs.json.encode(__streamDeckButton__Messages_Messages_Fields_.getTitleMessage(context, title)));
+    _v_:send(hs.json.encode(messages.getTitleMessage(context, title)));
   end;
 end
 obj.prototype.setImage = function(self,id,imagePath) 
@@ -1434,7 +1434,7 @@ obj.prototype.setImage = function(self,id,imagePath)
       end;
       local context = __streamDeckButton__Data_Dict_Impl_.iterator(ctxs);
       while (context:hasNext()) do 
-        local message = __streamDeckButton__Messages_Messages_Fields_.getImageMessage(context:next(), imagePath);
+        local message = messages.getImageMessage(context:next(), imagePath);
         if (message == nil) then 
           _gthis.logger.ef("Error generating image message for %s", imagePath);
           do return end;

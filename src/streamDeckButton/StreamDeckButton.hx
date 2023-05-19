@@ -58,7 +58,7 @@ class StreamDeckButton {
     final subscribers = switch (willAppearSubscribers[id]) {
       case null:
         final value = [];
-        keyDownSubscribers[id] = value;
+        willAppearSubscribers[id] = value;
         value;
       case value if (value != null):
         value;
