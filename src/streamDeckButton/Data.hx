@@ -32,7 +32,7 @@ class TableIterator< T > {
 typedef StringTable< T > = Table< String, T >;
 
 abstract Dict(StringTable< String >) from StringTable< String > to StringTable< String > {
-  inline public function new(args) {
+  inline public function new(args:StringTable< String >) {
     this = args;
   }
 

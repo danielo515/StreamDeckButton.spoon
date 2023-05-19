@@ -5,7 +5,6 @@ import streamDeckButton.Messages.MessageID;
 import hammerspoon.Hammerspoon.HttpServer;
 import hammerspoon.Json;
 import hammerspoon.Logger;
-import haxe.DynamicAccess;
 
 typedef Subscriber = String -> IncomingMessage -> Null< Dynamic >;
 
@@ -26,7 +25,7 @@ class StreamDeckButton {
   public final getTitleMessage = Messages.getTitleMessage;
 
   // Runtime
-  public var contexts:Null< State > = null;
+  public var contextsById:Null< State > = null;
   public var server:Null< HttpServer >;
 
   public final keyDownSubscribers = new Map< MessageID, Array< Subscriber > >();
@@ -71,22 +70,22 @@ class StreamDeckButton {
   public function msgHandler(message:String):String {
     logger.d("Received message");
     var params = Messages.parseMessage(message);
-    trace(params);
+    logger.d("parsed: ", params);
     switch (params) {
       case Left(error):
         logger.e("Error parsing message: %s", error);
         return "";
       case Right(parsedMessage = {payload: {settings: s}, context: ctx, event: event}):
-        if (contexts == null) {
+        if (contextsById == null) {
           logger.e("Contexts is null");
           return "";
         }
-        contexts.run(contexts -> {
-          if (!contexts.exists(s.id)) {
-            setTitle(ctx, "Initializing");
+        contextsById.run(contextsById -> {
+          if (!contextsById.exists(s.id)) {
+            server!.send(Json.encode(Messages.getTitleMessage(ctx, "Initializing")));
             logger.f("new id found: %s with this context: %s", s.id, ctx);
           }
-          contexts.addContext(s.id, ctx);
+          contextsById.addContext(s.id, ctx);
         });
 
         final subscribers:Array< Subscriber > = switch (event) {
@@ -122,8 +121,17 @@ class StreamDeckButton {
     return "";
   }
 
-  public function setTitle(context:String, title:String) {
-    server!.send(Json.encode(Messages.getTitleMessage(context, title)));
+  public function setTitle(id:MessageID, title:String) {
+    if (id == null) {
+      logger.ef("setTitle: id is null ");
+      return;
+    }
+    final contexts = contextsById!.get(id);
+    if (contexts == null) {
+      logger.ef("setTitle: contexts is null for id '%s'", id);
+      return;
+    }
+    for (ctx in contexts) server!.send(Json.encode(Messages.getTitleMessage(ctx, title)));
   }
 
   /**
@@ -136,11 +144,11 @@ class StreamDeckButton {
     * imagePath - The path to the image to set
   **/
   public function setImage(id:MessageID, imagePath:String) {
-    if (id == null || !contexts!.exists(id).or(false)) {
+    if (id == null || !contextsById!.exists(id).or(false)) {
       logger.ef("setImage: id is null or contexts[id] is null", id);
       return;
     }
-    contexts.run(ctx -> {
+    contextsById.run(ctx -> {
       final ctxs = ctx.get(id);
       if (ctxs == null) {
         logger.ef("setImage for %s leads to no context", id);
@@ -158,7 +166,7 @@ class StreamDeckButton {
   }
 
   public function start(port:Int) {
-    contexts = State.getInstance();
+    contextsById = State.getInstance();
     server = HttpServer.make(false, true);
     server.apply(server -> {
       server.setPort(port.or(3094));

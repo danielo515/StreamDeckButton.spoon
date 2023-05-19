@@ -202,7 +202,6 @@ local String = _hx_e()
 local Std = _hx_e()
 __haxe_IMap = _hx_e()
 __haxe_Exception = _hx_e()
-__haxe_Log = _hx_e()
 __haxe_NativeStackTrace = _hx_e()
 __haxe_ValueException = _hx_e()
 __haxe_ds_Either = _hx_e()
@@ -813,30 +812,6 @@ end
 
 __haxe_Exception.prototype.__class__ =  __haxe_Exception
 
-__haxe_Log.new = {}
-__haxe_Log.__name__ = true
-__haxe_Log.formatOutput = function(v,infos) 
-  local str = Std.string(v);
-  if (infos == nil) then 
-    do return str end;
-  end;
-  local pstr = Std.string(Std.string(infos.fileName) .. Std.string(":")) .. Std.string(infos.lineNumber);
-  if (infos.customParams ~= nil) then 
-    local _g = 0;
-    local _g1 = infos.customParams;
-    while (_g < _g1.length) do 
-      local v = _g1[_g];
-      _g = _g + 1;
-      str = Std.string(str) .. Std.string((Std.string(", ") .. Std.string(Std.string(v))));
-    end;
-  end;
-  do return Std.string(Std.string(pstr) .. Std.string(": ")) .. Std.string(str) end;
-end
-__haxe_Log.trace = function(v,infos) 
-  local str = __haxe_Log.formatOutput(v, infos);
-  _hx_print(str);
-end
-
 __haxe_NativeStackTrace.new = {}
 __haxe_NativeStackTrace.__name__ = true
 __haxe_NativeStackTrace.saveStack = function(exception) 
@@ -1252,7 +1227,7 @@ end
 obj.super = function(self) 
   self.willAppearSubscribers = __haxe_ds_StringMap.new();
   self.keyDownSubscribers = __haxe_ds_StringMap.new();
-  self.contexts = nil;
+  self.contextsById = nil;
   self.getTitleMessage = _hx_funcToField(messages.getTitleMessage);
   self.showOkMessage = _hx_funcToField(messages.showOkMessage);
   self.getImageMessage = _hx_funcToField(messages.getImageMessage);
@@ -1329,7 +1304,7 @@ end
 obj.prototype.msgHandler = function(self,message) 
   self.logger.d("Received message");
   local params = messages.parseMessage(message);
-  __haxe_Log.trace(params, _hx_o({__fields__={fileName=true,lineNumber=true,className=true,methodName=true},fileName="src/streamDeckButton/StreamDeckButton.hx",lineNumber=74,className="streamDeckButton.StreamDeckButton",methodName="msgHandler"}));
+  self.logger.d("parsed: ", params);
   local tmp = params[1];
   if (tmp) == 0 then 
     self.logger.e("Error parsing message: %s", params[2]);
@@ -1339,14 +1314,17 @@ obj.prototype.msgHandler = function(self,message)
     local _g1 = _g.context;
     local _g2 = _g.event;
     local _g3 = _g.payload.settings;
-    if (self.contexts == nil) then 
+    if (self.contextsById == nil) then 
       self.logger.e("Contexts is null");
       do return "" end;
     end;
-    local value = self.contexts;
+    local value = self.contextsById;
     if (value ~= nil) then 
       if (not value:exists(_g3.id)) then 
-        self:setTitle(_g1, "Initializing");
+        local _v_ = self.server;
+        if (_v_ ~= nil) then 
+          _v_:send(hs.json.encode(messages.getTitleMessage(_g1, "Initializing")));
+        end;
         self.logger.f("new id found: %s with this context: %s", _g3.id, _g1);
       end;
       value:addContext(_g3.id, _g1);
@@ -1392,17 +1370,37 @@ obj.prototype.msgHandler = function(self,message)
       do return hs.json.encode(messages.showOkMessage(_g1)) end;
     end; end;
 end
-obj.prototype.setTitle = function(self,context,title) 
-  local _v_ = self.server;
-  if (_v_ ~= nil) then 
-    _v_:send(hs.json.encode(messages.getTitleMessage(context, title)));
+obj.prototype.setTitle = function(self,id,title) 
+  if (id == nil) then 
+    self.logger.ef("setTitle: id is null ");
+    do return end;
+  end;
+  local _v_ = self.contextsById;
+  local contexts = (function() 
+    local _hx_1
+    if (_v_ == nil) then 
+    _hx_1 = nil; else 
+    _hx_1 = _v_:get(id); end
+    return _hx_1
+  end )();
+  if (contexts == nil) then 
+    self.logger.ef("setTitle: contexts is null for id '%s'", id);
+    do return end;
+  end;
+  local ctx = __streamDeckButton__Data_Dict_Impl_.iterator(contexts);
+  while (ctx:hasNext()) do 
+    local ctx = ctx:next();
+    local _v_ = self.server;
+    if (_v_ ~= nil) then 
+      _v_:send(hs.json.encode(messages.getTitleMessage(ctx, title)));
+    end;
   end;
 end
 obj.prototype.setImage = function(self,id,imagePath) 
   local _gthis = self;
   local tmp;
   if (id ~= nil) then 
-    local _v_ = self.contexts;
+    local _v_ = self.contextsById;
     local value = (function() 
       local _hx_1
       if (_v_ == nil) then 
@@ -1424,7 +1422,7 @@ obj.prototype.setImage = function(self,id,imagePath)
     self.logger.ef("setImage: id is null or contexts[id] is null", id);
     do return end;
   end;
-  local value = self.contexts;
+  local value = self.contextsById;
   if (value ~= nil) then 
     (function(ctx) 
       local ctxs = ctx:get(id);
@@ -1448,7 +1446,7 @@ obj.prototype.setImage = function(self,id,imagePath)
   end;
 end
 obj.prototype.start = function(self,port) 
-  self.contexts = __streamDeckButton_State.getInstance();
+  self.contextsById = __streamDeckButton_State.getInstance();
   self.server = hs.httpserver.new(false, true);
   local value = self.server;
   if (value ~= nil) then 
@@ -1533,8 +1531,6 @@ _hx_funcToField = function(f)
     return f
   end
 end
-
-_hx_print = print or (function() end)
 
 _hx_table = {}
 _hx_table.pack = _G.table.pack or function(...)

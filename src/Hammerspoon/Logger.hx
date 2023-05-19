@@ -24,7 +24,7 @@ extern class Logger {
    * Returns:
    *  * None
    */
-  @:luaDotMethod public function d(...params:String):Void;
+  @:luaDotMethod public function d(...params:Dynamic):Void;
 
   /**
    * Default log level for new logger instances.
