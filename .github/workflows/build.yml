@@ -39,7 +39,7 @@ jobs:
         if [ -f StreamDeckButton.spoon.zip ]; then
           rm StreamDeckButton.spoon.zip
         fi
-        zip -r StreamDeckButton.spoon.zip . -x '*.git*' -x '*.github*'
+        zip -r StreamDeckButton.spoon.zip . -x '*.git*' -x '*.github*' -x '*src*'
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
