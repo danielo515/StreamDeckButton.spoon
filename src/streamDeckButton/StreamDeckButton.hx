@@ -12,7 +12,7 @@ typedef Subscriber = String -> IncomingMessage -> Null< Dynamic >;
 class StreamDeckButton {
   // Metadata
   public final name:String = "StreamDeckButton";
-  public final version:String = "4.0.0"; // x-release-please-version
+  public final version:String = "4.0.1"; // x-release-please-version
   public final author:String = "Danielo Rodríguez <rdanielo@gmail.com>";
   public final license:String = "MIT - https://opensource.org/licenses/MIT";
   public final homepage:String = "https://github.com/danielo515/StreamDeckButton.spoon";
