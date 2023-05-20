@@ -10,3 +10,5 @@ In order to communicate with the StreamDeck this Spoon requires the proxy extens
 installed in your elgato app, and create the buttons using that extension.
 Then put the connection credentials and proper ID into the button and use those 
 in your config.
+
+## Example usage
