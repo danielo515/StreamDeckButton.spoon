@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.2](https://github.com/danielo515/StreamDeckButton.spoon/compare/v4.0.1...v4.0.2) (2023-05-20)
+
+
+### Bug Fixes
+
+* force release ([1065c36](https://github.com/danielo515/StreamDeckButton.spoon/commit/1065c363877c5b53d468caabaf028326b73fd297))
+
 ## [4.0.1](https://github.com/danielo515/StreamDeckButton.spoon/compare/v4.0.0...v4.0.1) (2023-05-20)
 
 
