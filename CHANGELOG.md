@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/danielo515/StreamDeckButton.spoon/compare/v3.0.1...v4.0.0) (2023-05-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* Haxe rewrite
+
+### Features
+
+* Haxe rewrite ([5424b7c](https://github.com/danielo515/StreamDeckButton.spoon/commit/5424b7ce2e57fa6f58a66c017c667f40e8382fd8))
+
 ## [3.0.1](https://github.com/danielo515/StreamDeckButton.spoon/compare/v3.0.0...v3.0.1) (2023-05-11)
 
 
