@@ -3,7 +3,6 @@
 Language                 Files     Lines   Blanks  Comments     Code Complexity
 ───────────────────────────────────────────────────────────────────────────────
 Lua                          3       321       32        69      220         37
-Haxe                         2        32        4         0       28          0
 JSON                         1       346       32         0      314          0
 License                      1        21        4         0       17          0
 Markdown                     1        34       17         0       17          0
