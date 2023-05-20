@@ -1,5 +1,5 @@
 libs.hxml
---macro nullSafety("Hammerspoon", Strict)
+--macro nullSafety("hammerspoon", Strict)
 --macro nullSafety("streamDeckButton", Strict)
 --macro Safety.safeNavigation("", true)
 
