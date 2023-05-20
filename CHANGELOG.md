@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/danielo515/StreamDeckButton.spoon/compare/v3.0.0...v3.0.1) (2023-05-11)
+
+
+### Bug Fixes
+
+* provide proper context ([4a92721](https://github.com/danielo515/StreamDeckButton.spoon/commit/4a92721acc93e5e54e0595ca475acd91c2efe3e7))
+
 ## [3.0.0](https://github.com/danielo515/StreamDeckButton.spoon/compare/v2.1.0...v3.0.0) (2023-05-08)
 
 
