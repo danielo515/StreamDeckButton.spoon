@@ -20,17 +20,26 @@ jobs:
       with:
         release-type: simple
         package-name: StreamDeckButton.spoon
-        extra-files: |
-            init.lua
         token: ${{ secrets.GITHUB_TOKEN }}
-
+        extra-files: |
+            src/streamDeckButton/StreamDeckButton.hx
+    - name: Setup haxe
+      if: ${{ steps.release.outputs.release_created }}
+      uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: 4.2.5
+    - name: Compile Haxe code
+      if: ${{ steps.release.outputs.release_created }}
+      run: |
+        haxelib install --always libs.hxml
+        haxe build.hxml
     - name: Zip Spoon
       if: ${{ steps.release.outputs.release_created }}
       run: |
         if [ -f StreamDeckButton.spoon.zip ]; then
           rm StreamDeckButton.spoon.zip
         fi
-        zip -r StreamDeckButton.spoon.zip . -x '*.git*' -x '*.github*'
+        zip -r StreamDeckButton.spoon.zip . -x '*.git*' -x '*.github*' -x '*src*' -x '*gpt*'
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2

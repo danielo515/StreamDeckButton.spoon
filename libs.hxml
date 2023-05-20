@@ -1,0 +1,3 @@
+--library safety:1.1.2 
+--library json2object:3.11.0
+--library hammerspoon-hx
