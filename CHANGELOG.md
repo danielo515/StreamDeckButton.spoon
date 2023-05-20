@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.3](https://github.com/danielo515/StreamDeckButton.spoon/compare/v4.0.2...v4.0.3) (2023-05-20)
+
+
+### Bug Fixes
+
+* build zips just the right thing ([ab8dbe0](https://github.com/danielo515/StreamDeckButton.spoon/commit/ab8dbe0042e4d732797382dce8292dcf6c48c5bc))
+
 ## [4.0.2](https://github.com/danielo515/StreamDeckButton.spoon/compare/v4.0.1...v4.0.2) (2023-05-20)
 
 
