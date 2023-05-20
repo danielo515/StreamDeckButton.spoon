@@ -1235,7 +1235,7 @@ obj.super = function(self)
   self.homepage = "https://github.com/danielo515/StreamDeckButton.spoon";
   self.license = "MIT - https://opensource.org/licenses/MIT";
   self.author = "Danielo Rodríguez <rdanielo@gmail.com>";
-  self.version = "3.0.0";
+  self.version = "3.0.1";
   self.name = "StreamDeckButton";
 end
 _hx_exports["StreamDeckButton"] = obj
