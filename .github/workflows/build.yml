@@ -39,7 +39,7 @@ jobs:
         if [ -f StreamDeckButton.spoon.zip ]; then
           rm StreamDeckButton.spoon.zip
         fi
-        zip -r StreamDeckButton.spoon.zip -r init.lua out
+        zip StreamDeckButton.spoon.zip -r init.lua out
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
